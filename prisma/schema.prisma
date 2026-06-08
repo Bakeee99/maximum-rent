@@ -1,0 +1,152 @@
+// =============================================================================
+//  Maximum Rent a Car — Prisma schema (PostgreSQL / Supabase)
+//  npx prisma migrate dev --name init && npx prisma generate
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled (app)
+  directUrl = env("DIRECT_URL") // direct (migrations)
+}
+
+enum CarClass {
+  CITY_CAR
+  ECONOMY
+  COMPACT
+  MIDSIZE
+  FULLSIZE
+  LUXURY
+  SUV
+  VAN
+  MINIBUS
+}
+
+enum Transmission {
+  MANUAL
+  AUTOMATIC
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  HYBRID
+  PLUG_IN_HYBRID
+  ELECTRIC
+}
+
+enum LocationType {
+  HEAD_OFFICE
+  AIRPORT
+  BUS_STATION
+  CITY_OFFICE
+}
+
+enum InquiryChannel {
+  EMAIL
+  WHATSAPP
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum Locale {
+  HR
+  EN
+}
+
+model Location {
+  id         String       @id @default(cuid())
+  slug       String       @unique
+  name       String
+  type       LocationType @default(CITY_OFFICE)
+  street     String
+  city       String
+  postalCode String
+  latitude   Float?
+  longitude  Float?
+  isActive   Boolean      @default(true)
+  sortOrder  Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  pickupInquiries Inquiry[] @relation("PickupLocation")
+  returnInquiries Inquiry[] @relation("ReturnLocation")
+
+  @@index([isActive, sortOrder])
+}
+
+model Car {
+  id            String       @id @default(cuid())
+  slug          String       @unique
+  brand         String
+  model         String
+  title         String
+  year          Int
+  carClass      CarClass
+  transmission  Transmission
+  passengers    Int
+  doors         Int          @default(4)
+  fuelType      FuelType
+  emissionClass String?
+  luggage       Int?
+  airCondition  Boolean      @default(true)
+  pricePerDay   Decimal?     @db.Decimal(10, 2)
+  currency      String       @default("BAM")
+  deposit       Decimal?     @db.Decimal(10, 2)
+  images        String[]
+  descriptionHr String?
+  descriptionEn String?
+  isAvailable   Boolean      @default(true)
+  isFeatured    Boolean      @default(false)
+  sortOrder     Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  inquiries Inquiry[]
+
+  @@index([carClass, isAvailable])
+  @@index([isFeatured, sortOrder])
+}
+
+model Inquiry {
+  id        String @id @default(cuid())
+  reference String @unique @default(cuid())
+
+  car              Car?    @relation(fields: [carId], references: [id], onDelete: SetNull)
+  carId            String?
+  carTitleSnapshot String?
+
+  pickupLocation   Location? @relation("PickupLocation", fields: [pickupLocationId], references: [id], onDelete: SetNull)
+  pickupLocationId String?
+  returnLocation   Location? @relation("ReturnLocation", fields: [returnLocationId], references: [id], onDelete: SetNull)
+  returnLocationId String?
+
+  pickupAt DateTime
+  returnAt DateTime
+
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  flightNumber String?
+  message      String?
+
+  channel InquiryChannel @default(EMAIL)
+  status  InquiryStatus  @default(NEW)
+  locale  Locale         @default(HR)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([carId])
+}

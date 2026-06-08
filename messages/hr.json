@@ -1,0 +1,133 @@
+{
+  "Nav": {
+    "home": "Početna",
+    "business": "Poslovna ponuda",
+    "about": "O nama",
+    "vehicles": "Vozila",
+    "terms": "Uvjeti najma",
+    "contact": "Kontakt",
+    "menu": "Izbornik",
+    "theme": "Promijeni temu",
+    "language": "Jezik"
+  },
+  "Hero": {
+    "eyebrow": "Rent a Car · Hercegovina",
+    "title": "Vaš ključ slobode na cesti",
+    "subtitle": "Premium vozni park, preuzimanje na 6 lokacija i rezervacija bez kompromisa. Od gradskih automobila do luksuznih limuzina.",
+    "ctaSearch": "Rezervirajte vozilo",
+    "ctaFleet": "Pogledajte vozni park",
+    "scroll": "Krenite"
+  },
+  "Search": {
+    "title": "Pronađite svoje vozilo",
+    "pickupLocation": "Poslovnica preuzimanja",
+    "returnLocation": "Poslovnica vraćanja",
+    "pickupDate": "Datum preuzimanja",
+    "returnDate": "Datum vraćanja",
+    "time": "Vrijeme",
+    "sameLocation": "Vraćam vozilo na istu lokaciju",
+    "search": "Pretraži vozila",
+    "placeholder": "Odaberite lokaciju",
+    "errRequired": "Molimo popunite sva polja.",
+    "errOrder": "Datum vraćanja mora biti nakon preuzimanja."
+  },
+  "Fleet": {
+    "title": "Vozni park",
+    "subtitle": "Pažljivo održavan vozni park za svaku potrebu i budžet.",
+    "resultsTitle": "Rezultati pretrage",
+    "detailsTitle": "Detalji rezervacije",
+    "period": "Period",
+    "pickup": "Preuzimanje",
+    "return": "Povratak",
+    "days": "dana",
+    "day": "dan",
+    "noResults": "Nema dostupnih vozila za odabrane datume. Pokušajte s drugim terminom ili nas kontaktirajte.",
+    "allVehicles": "Sva vozila",
+    "select": "Izaberi",
+    "class": "Klasa",
+    "year": "Godište",
+    "gearbox": "Mjenjač",
+    "seats": "Putnika",
+    "fuel": "Gorivo"
+  },
+  "Inquiry": {
+    "title": "Upit za rezervaciju",
+    "subtitle": "Pošaljite upit ili nas kontaktirajte putem WhatsApp-a — javljamo se u najkraćem roku.",
+    "firstName": "Ime",
+    "lastName": "Prezime",
+    "email": "Email",
+    "phone": "Telefon",
+    "flight": "Broj leta (opcionalno)",
+    "message": "Napomena (opcionalno)",
+    "send": "Pošalji upit",
+    "whatsapp": "WhatsApp",
+    "or": "ili",
+    "sending": "Slanje...",
+    "success": "Upit je zaprimljen!",
+    "successBody": "Hvala. Naš tim će vam se javiti uskoro s potvrdom dostupnosti.",
+    "errRequired": "Obavezno polje",
+    "errEmail": "Unesite ispravan email",
+    "errPhone": "Unesite ispravan broj telefona",
+    "errGeneric": "Došlo je do greške. Pokušajte ponovno ili nas kontaktirajte direktno.",
+    "summaryPeriod": "Period",
+    "summaryPickup": "Preuzimanje",
+    "summaryReturn": "Povratak",
+    "close": "Zatvori"
+  },
+  "Footer": {
+    "contact": "Kontakt",
+    "locations": "Lokacije",
+    "follow": "Pratite nas",
+    "tagline": "Rent a Car — pouzdano iznajmljivanje vozila u Hercegovini.",
+    "rights": "Sva prava pridržana."
+  },
+  "About": {
+    "title": "O nama",
+    "lead": "Maximum Rent a Car — vaš partner za mobilnost u Hercegovini.",
+    "p1": "Već godinama pružamo uslugu iznajmljivanja vozila s naglaskom na pouzdanost, čistoću voznog parka i brzu, ljubaznu uslugu. Naš vozni park broji od 25 do 30 vozila, od ekonomičnih gradskih automobila do luksuznih limuzina i SUV-ova.",
+    "p2": "Preuzimanje i povrat vozila moguć je na šest lokacija diljem Hercegovine, uključujući zračnu luku Mostar i glavne autobusne kolodvore, što vaše putovanje čini jednostavnim od trenutka dolaska.",
+    "stat1": "vozila u parku",
+    "stat2": "lokacije",
+    "stat3": "podrška"
+  },
+  "Business": {
+    "title": "Poslovna ponuda",
+    "lead": "Fleksibilni najam za tvrtke, agencije i duže periode.",
+    "intro": "Nudimo prilagođene uvjete za poslovne korisnike — od dugoročnog najma do paketa za grupe i transfere. Kontaktirajte nas za personaliziranu ponudu.",
+    "f1Title": "Dugoročni najam",
+    "f1Body": "Posebne cijene za najam dulji od mjesec dana, s održavanjem uključenim.",
+    "f2Title": "Flotni najam",
+    "f2Body": "Rješenja za tvrtke kojima treba više vozila uz jedinstven račun.",
+    "f3Title": "Transferi",
+    "f3Body": "Dostava i preuzimanje vozila na zračnoj luci i hotelima.",
+    "cta": "Zatražite ponudu"
+  },
+  "Terms": {
+    "title": "Uvjeti najma",
+    "lead": "Transparentni uvjeti za bezbrižan najam.",
+    "items": [
+      "Minimalna dob vozača je 21 godina, uz vozačku dozvolu stariju od 2 godine.",
+      "Za preuzimanje vozila potrebni su važeća osobna iskaznica/putovnica i vozačka dozvola.",
+      "Cijena najma uključuje osnovno osiguranje, vinjete za BiH i neograničenu kilometražu.",
+      "Polog se utvrđuje ovisno o klasi vozila i vraća se u cijelosti nakon urednog povrata.",
+      "Vozilo se preuzima i vraća s punim spremnikom goriva.",
+      "Izlazak vozila izvan BiH moguć je uz prethodnu najavu i odgovarajuću dokumentaciju.",
+      "Otkazivanje rezervacije bez naknade moguće je do 48 sati prije preuzimanja."
+    ]
+  },
+  "Contact": {
+    "title": "Kontakt",
+    "lead": "Tu smo za sva vaša pitanja i rezervacije.",
+    "callUs": "Nazovite nas",
+    "emailUs": "Pišite nam",
+    "ourOffices": "Naše lokacije",
+    "whatsappCta": "Pišite nam na WhatsApp"
+  },
+  "Common": {
+    "from": "od",
+    "perDay": "dan",
+    "loading": "Učitavanje...",
+    "backHome": "Povratak na početnu",
+    "notFound": "Stranica nije pronađena"
+  }
+}

@@ -1,0 +1,72 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { inquirySchema } from "@/lib/validations";
+import { sendInquiryEmail } from "@/lib/email";
+
+export const runtime = "nodejs";
+
+export async function POST(req: Request) {
+  let json: unknown;
+  try {
+    json = await req.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+  }
+
+  const parsed = inquirySchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, error: "validation", issues: parsed.error.flatten() },
+      { status: 422 },
+    );
+  }
+  const d = parsed.data;
+
+  // Resolve relations defensively (ignore stale/unknown ids).
+  const [car, pickup, ret] = await Promise.all([
+    d.carId ? prisma.car.findUnique({ where: { id: d.carId } }) : null,
+    d.pickupLocationId
+      ? prisma.location.findUnique({ where: { id: d.pickupLocationId } })
+      : null,
+    d.returnLocationId
+      ? prisma.location.findUnique({ where: { id: d.returnLocationId } })
+      : null,
+  ]);
+
+  try {
+    const inquiry = await prisma.inquiry.create({
+      data: {
+        carId: car?.id ?? null,
+        carTitleSnapshot: car?.title ?? d.carTitle,
+        pickupLocationId: pickup?.id ?? null,
+        returnLocationId: ret?.id ?? null,
+        pickupAt: new Date(d.pickupAt),
+        returnAt: new Date(d.returnAt),
+        firstName: d.firstName,
+        lastName: d.lastName,
+        email: d.email,
+        phone: d.phone,
+        flightNumber: d.flightNumber || null,
+        message: d.message || null,
+        channel: "EMAIL",
+        locale: d.locale === "en" ? "EN" : "HR",
+      },
+    });
+
+    const email = await sendInquiryEmail({
+      ...d,
+      reference: inquiry.reference,
+      pickupLocationName: pickup?.name ?? null,
+      returnLocationName: ret?.name ?? null,
+    });
+
+    return NextResponse.json({
+      ok: true,
+      reference: inquiry.reference,
+      emailSent: email.sent,
+    });
+  } catch (err) {
+    console.error("[inquiries] create failed:", err);
+    return NextResponse.json({ ok: false, error: "server_error" }, { status: 500 });
+  }
+}

@@ -1,0 +1,95 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { SITE } from "@/lib/site-config";
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+export function Hero() {
+  const t = useTranslations("Hero");
+
+  const ytSrc =
+    `https://www.youtube-nocookie.com/embed/${SITE.youtubeId}` +
+    `?autoplay=1&mute=1&controls=0&loop=1&playlist=${SITE.youtubeId}` +
+    `&playsinline=1&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`;
+
+  return (
+    <section className="relative flex min-h-[92vh] items-center overflow-hidden">
+      {/* Background video */}
+      <div className="absolute inset-0 -z-10 bg-black">
+        <iframe
+          title="Maximum Rent a Car"
+          src={ytSrc}
+          allow="autoplay; encrypted-media"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2"
+        />
+      </div>
+
+      {/* Overlays: darken for legibility + fade into the page background */}
+      <div className="absolute inset-0 -z-10 bg-black/55" />
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-background to-transparent" />
+
+      <div className="container relative">
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease }}
+          className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-white/90 backdrop-blur"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          {t("eyebrow")}
+        </motion.p>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.05, ease }}
+          className="max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
+        >
+          {t("title")}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.12, ease }}
+          className="mt-6 max-w-xl text-base text-white/80 sm:text-lg"
+        >
+          {t("subtitle")}
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease }}
+          className="mt-9 flex flex-wrap items-center gap-3"
+        >
+          <a
+            href="#rezervacija"
+            className="group inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700"
+          >
+            {t("ctaSearch")}
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+          <Link
+            href="/vozila"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/10"
+          >
+            {t("ctaFleet")}
+          </Link>
+        </motion.div>
+      </div>
+
+      <a
+        href="#rezervacija"
+        aria-label={t("scroll")}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 transition-colors hover:text-white"
+      >
+        <ChevronDown className="h-6 w-6 animate-bounce" />
+      </a>
+    </section>
+  );
+}

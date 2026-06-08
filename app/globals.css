@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme — clean white + light-gray surfaces, near-black text */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
+    --surface: 0 0% 100%;
+    --surface-muted: 0 0% 96%;
+    --border: 0 0% 90%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --ring: 356 95% 46%;
+  }
+
+  .dark {
+    /* Dark theme — deep blacks + charcoal */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 96%;
+    --surface: 0 0% 9%;
+    --surface-muted: 0 0% 13%;
+    --border: 0 0% 18%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 64%;
+    --ring: 356 95% 52%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  .dark input[type="date"],
+  .dark input[type="time"] {
+    color-scheme: dark;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl backdrop-saturate-150;
+    background: hsl(var(--background) / 0.72);
+    border-bottom: 1px solid hsl(var(--border) / 0.6);
+  }
+}
