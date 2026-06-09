@@ -2,24 +2,56 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, CalendarDays, Clock, ArrowRight, AlertCircle } from "lucide-react";
+import { MapPin, CalendarDays, Clock, ArrowRight, AlertCircle, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 
 type SimpleLocation = { id: string; name: string; city: string };
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** Local `YYYY-MM-DD`. */
 function dateOffset(days = 0): string {
   const d = new Date();
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10); // yyyy-mm-dd
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-// 30-minute slots 00:00 → 23:30
-const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
-  const h = String(Math.floor(i / 2)).padStart(2, "0");
-  const m = i % 2 === 0 ? "00" : "30";
-  return `${h}:${m}`;
-});
+// 24-hour, 30-minute slots: 00:00 → 23:30. Always 24h, no AM/PM, all browsers.
+const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => `${pad(Math.floor(i / 2))}:${i % 2 ? "30" : "00"}`);
+
+const CONTROL =
+  "h-12 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30";
+const DATE_CONTROL = `${CONTROL} flex-1 [color-scheme:light] dark:[color-scheme:dark]`;
+const LBL =
+  "mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground";
+
+/** Select with a custom, always-aligned chevron (consistent across browsers). */
+function StyledSelect({
+  id,
+  value,
+  onChange,
+  children,
+}: {
+  id?: string;
+  value: string;
+  onChange: (v: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`${CONTROL} appearance-none pr-10`}
+      >
+        {children}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    </div>
+  );
+}
 
 export function ReservationSearchForm({ locations }: { locations: SimpleLocation[] }) {
   const t = useTranslations("Search");
@@ -34,16 +66,8 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
   const [returnTime, setReturnTime] = useState("09:00");
   const [error, setError] = useState<string | null>(null);
 
+  const today = useMemo(() => dateOffset(0), []);
   const effectiveReturnId = sameLocation ? pickupLocationId : returnLocationId;
-
-  const pickupAt = useMemo(
-    () => new Date(`${pickupDate}T${pickupTime}`),
-    [pickupDate, pickupTime],
-  );
-  const returnAt = useMemo(
-    () => new Date(`${returnDate}T${returnTime}`),
-    [returnDate, returnTime],
-  );
 
   function handleSubmit() {
     setError(null);
@@ -51,23 +75,20 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
       setError(t("errRequired"));
       return;
     }
-    if (returnAt <= pickupAt) {
+    const start = new Date(`${pickupDate}T${pickupTime}`);
+    const end = new Date(`${returnDate}T${returnTime}`);
+    if (end <= start) {
       setError(t("errOrder"));
       return;
     }
     const params = new URLSearchParams({
       pickupLocationId,
       returnLocationId: effectiveReturnId,
-      pickupAt: pickupAt.toISOString(),
-      returnAt: returnAt.toISOString(),
+      pickupAt: start.toISOString(),
+      returnAt: end.toISOString(),
     });
     router.push(`/vozila?${params.toString()}`);
   }
-
-  const field =
-    "h-12 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30";
-  const lbl =
-    "mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground";
 
   return (
     <motion.form
@@ -80,20 +101,15 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
       }}
       className="w-full rounded-2xl border border-border bg-surface/95 p-5 shadow-card backdrop-blur-md sm:p-6"
     >
-      <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr_auto] lg:items-end">
-        {/* Locations */}
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4">
+        {/* Locations row */}
+        <div className={`grid grid-cols-1 gap-4 ${sameLocation ? "" : "sm:grid-cols-2"}`}>
           <div>
-            <label htmlFor="pickup-loc" className={lbl}>
+            <label htmlFor="pickup-loc" className={LBL}>
               <MapPin className="h-3.5 w-3.5 text-brand" />
               {t("pickupLocation")}
             </label>
-            <select
-              id="pickup-loc"
-              value={pickupLocationId}
-              onChange={(e) => setPickupLocationId(e.target.value)}
-              className={field}
-            >
+            <StyledSelect id="pickup-loc" value={pickupLocationId} onChange={setPickupLocationId}>
               <option value="" disabled>
                 {t("placeholder")}
               </option>
@@ -102,28 +118,23 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
                   {l.name}
                 </option>
               ))}
-            </select>
+            </StyledSelect>
           </div>
 
-          <AnimatePresence initial={false} mode="popLayout">
+          <AnimatePresence initial={false}>
             {!sameLocation && (
               <motion.div
                 key="return-loc"
-                initial={{ opacity: 0, y: -6 }}
+                initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.22 }}
               >
-                <label htmlFor="return-loc" className={lbl}>
+                <label htmlFor="return-loc" className={LBL}>
                   <MapPin className="h-3.5 w-3.5 text-brand" />
                   {t("returnLocation")}
                 </label>
-                <select
-                  id="return-loc"
-                  value={returnLocationId}
-                  onChange={(e) => setReturnLocationId(e.target.value)}
-                  className={field}
-                >
+                <StyledSelect id="return-loc" value={returnLocationId} onChange={setReturnLocationId}>
                   <option value="" disabled>
                     {t("placeholder")}
                   </option>
@@ -132,84 +143,75 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
                       {l.name}
                     </option>
                   ))}
-                </select>
+                </StyledSelect>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Dates + times */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Dates row */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* Pickup */}
           <div>
-            <label htmlFor="pickup-date" className={lbl}>
+            <label htmlFor="pickup-date" className={LBL}>
               <CalendarDays className="h-3.5 w-3.5 text-brand" />
               {t("pickupDate")}
             </label>
-            <div className="grid grid-cols-[1fr_auto] gap-2">
+            <div className="flex gap-2">
               <input
                 id="pickup-date"
                 type="date"
-                min={dateOffset(0)}
+                min={today}
                 value={pickupDate}
-                onChange={(e) => setPickupDate(e.target.value)}
-                className={field}
+                onChange={(e) => {
+                  setPickupDate(e.target.value);
+                  if (returnDate < e.target.value) setReturnDate(e.target.value);
+                }}
+                className={DATE_CONTROL}
               />
-              <select
-                aria-label={t("time")}
-                value={pickupTime}
-                onChange={(e) => setPickupTime(e.target.value)}
-                className={`${field} w-[4.5rem] px-2`}
-              >
-                {TIME_SLOTS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+              <div className="w-28 shrink-0">
+                <StyledSelect value={pickupTime} onChange={setPickupTime}>
+                  {TIME_SLOTS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </StyledSelect>
+              </div>
             </div>
           </div>
 
+          {/* Return */}
           <div>
-            <label htmlFor="return-date" className={lbl}>
+            <label htmlFor="return-date" className={LBL}>
               <Clock className="h-3.5 w-3.5 text-brand" />
               {t("returnDate")}
             </label>
-            <div className="grid grid-cols-[1fr_auto] gap-2">
+            <div className="flex gap-2">
               <input
                 id="return-date"
                 type="date"
                 min={pickupDate}
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
-                className={field}
+                className={DATE_CONTROL}
               />
-              <select
-                aria-label={t("time")}
-                value={returnTime}
-                onChange={(e) => setReturnTime(e.target.value)}
-                className={`${field} w-[4.5rem] px-2`}
-              >
-                {TIME_SLOTS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+              <div className="w-28 shrink-0">
+                <StyledSelect value={returnTime} onChange={setReturnTime}>
+                  {TIME_SLOTS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </StyledSelect>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand px-6 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          {t("search")}
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-        </button>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+      {/* Bottom row: same-location toggle + submit */}
+      <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <label className="flex cursor-pointer select-none items-center gap-2 text-sm text-muted-foreground">
           <input
             type="checkbox"
@@ -220,20 +222,30 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
           {t("sameLocation")}
         </label>
 
-        <AnimatePresence>
-          {error && (
-            <motion.p
-              initial={{ opacity: 0, x: 6 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              role="alert"
-              className="flex items-center gap-1.5 text-sm font-medium text-brand"
-            >
-              <AlertCircle className="h-4 w-4" />
-              {error}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, x: 6 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                role="alert"
+                className="flex items-center gap-1.5 text-sm font-medium text-brand"
+              >
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                {error}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
+          <button
+            type="submit"
+            className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto"
+          >
+            {t("search")}
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </button>
+        </div>
       </div>
     </motion.form>
   );
