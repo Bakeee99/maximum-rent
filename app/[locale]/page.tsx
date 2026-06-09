@@ -3,6 +3,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { toCarListItem } from "@/lib/types";
 import { Hero } from "@/components/home/Hero";
+import { WhyChoose } from "@/components/home/WhyChoose";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { Locations } from "@/components/home/Locations";
+import { Reviews } from "@/components/home/Reviews";
+import { BusinessTeaser } from "@/components/home/BusinessTeaser";
+import { Faq } from "@/components/home/Faq";
+import { FinalCta } from "@/components/home/FinalCta";
 import { ReservationSearchForm } from "@/components/reservation/ReservationSearchForm";
 import { FleetGrid } from "@/components/fleet/FleetGrid";
 
@@ -45,18 +52,35 @@ export default async function HomePage({
         <ReservationSearchForm locations={locations} />
       </section>
 
+      <WhyChoose />
+
+      <HowItWorks />
+
       {/* Featured fleet */}
       {cars.length > 0 && (
-        <section className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+        <section className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
           <div className="mb-10 max-w-2xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <p className="mb-3 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+              <span className="h-px w-7 bg-brand" />
               {t("title")}
+            </p>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {t("subtitle")}
             </h2>
-            <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
           </div>
           <FleetGrid cars={cars} />
         </section>
       )}
+
+      <Locations />
+
+      <Reviews />
+
+      <BusinessTeaser />
+
+      <Faq />
+
+      <FinalCta />
     </>
   );
 }

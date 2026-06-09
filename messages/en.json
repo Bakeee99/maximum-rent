@@ -129,5 +129,106 @@
     "loading": "Loading...",
     "backHome": "Back to home",
     "notFound": "Page not found"
+  },
+  "WhyChoose": {
+    "eyebrow": "Why Maximum",
+    "title": "Rental without compromise",
+    "subtitle": "Everything you need for a carefree trip — from pick-up to return.",
+    "items": [
+      {
+        "title": "6 locations",
+        "body": "Pick-up and return in Čitluk, Mostar, Međugorje, Čapljina and Ljubuški."
+      },
+      {
+        "title": "All included",
+        "body": "Insurance, BiH vignettes and unlimited mileage — no hidden costs."
+      },
+      {
+        "title": "Modern fleet",
+        "body": "Regularly maintained, spotless vehicles, from city cars to luxury."
+      },
+      {
+        "title": "24/7 support",
+        "body": "We're here at every moment of your journey."
+      }
+    ]
+  },
+  "HowItWorks": {
+    "eyebrow": "How it works",
+    "title": "Your car in three steps",
+    "subtitle": "No online payment — booking is quick and simple, by inquiry.",
+    "steps": [
+      {
+        "title": "Choose a vehicle",
+        "body": "Browse the fleet and pick the dates that suit you."
+      },
+      {
+        "title": "Send an inquiry",
+        "body": "Send your inquiry via the form or WhatsApp in a few clicks."
+      },
+      {
+        "title": "Pick up the keys",
+        "body": "We confirm availability and meet you at the agreed location."
+      }
+    ]
+  },
+  "Locations": {
+    "eyebrow": "Our locations",
+    "title": "Pick-up across Herzegovina",
+    "subtitle": "We welcome you at Mostar Airport too — your car is ready the moment you land.",
+    "airportBadge": "Airport"
+  },
+  "Reviews": {
+    "eyebrow": "Guest trust",
+    "title": "Rated 4.8 on Google",
+    "subtitle": "Average rating based on {count} reviews from satisfied customers.",
+    "cta": "Read the reviews"
+  },
+  "BusinessTeaser": {
+    "eyebrow": "For business",
+    "title": "Business rental & transfers",
+    "body": "Long-term rental with maintenance included, fleet solutions on a single invoice, and transfers to the airport and hotels.",
+    "points": [
+      "Long-term rental",
+      "Fleet rental",
+      "Transfers"
+    ],
+    "cta": "Request a quote"
+  },
+  "Faq": {
+    "eyebrow": "FAQ",
+    "title": "Everything you want to know",
+    "items": [
+      {
+        "q": "What is the minimum rental age?",
+        "a": "21 years, with a driving licence held for over 2 years."
+      },
+      {
+        "q": "What do I need to collect the vehicle?",
+        "a": "A valid ID or passport and a driving licence."
+      },
+      {
+        "q": "What's included in the rental price?",
+        "a": "Basic insurance, BiH vignettes and unlimited mileage."
+      },
+      {
+        "q": "How does the deposit work?",
+        "a": "The deposit depends on the vehicle class and is fully refunded after a proper return."
+      },
+      {
+        "q": "Can I take the vehicle outside BiH?",
+        "a": "Yes, with prior notice and the right paperwork."
+      },
+      {
+        "q": "Can I cancel my reservation?",
+        "a": "Free cancellation is available up to 48 hours before pick-up."
+      }
+    ]
+  },
+  "FinalCta": {
+    "title": "Ready to hit the road?",
+    "subtitle": "Book a vehicle in a few clicks — we confirm availability as soon as possible.",
+    "ctaPrimary": "Book a vehicle",
+    "ctaSecondary": "Call us"
   }
 }
