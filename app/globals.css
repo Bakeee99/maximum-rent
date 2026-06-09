@@ -41,6 +41,19 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  /* Smoothly cross-fade theme colors when switching dark/light.
+     Only color-ish properties transition — transform & opacity are left
+     alone so Framer Motion animations stay snappy. Elements that already
+     carry a Tailwind transition utility (buttons, cards) keep their own
+     timing because a class selector outranks the universal selector. */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   .dark input[type="date"],
   .dark input[type="time"] {
     color-scheme: dark;
