@@ -17,3 +17,16 @@ export const inquirySchema = z.object({
 });
 
 export type InquiryInput = z.infer<typeof inquirySchema>;
+
+export const contactRequestSchema = z.object({
+  type: z.enum(["contact", "business"]).default("contact"),
+  firstName: z.string().trim().min(2).max(60),
+  lastName: z.string().trim().min(2).max(60),
+  email: z.string().trim().email(),
+  phone: z.string().trim().min(6).max(30),
+  company: z.string().trim().max(120).optional().or(z.literal("")),
+  message: z.string().trim().max(2000).optional().or(z.literal("")),
+  locale: z.enum(["hr", "en"]).default("hr"),
+});
+
+export type ContactRequestInput = z.infer<typeof contactRequestSchema>;

@@ -150,3 +150,22 @@ model Inquiry {
   @@index([status, createdAt])
   @@index([carId])
 }
+
+// General contact / business inquiries sent from the website forms.
+// Separate from `Inquiry` (which is reservation-specific and requires dates).
+model ContactRequest {
+  id        String   @id @default(cuid())
+  reference String   @unique @default(cuid())
+  type      String   @default("CONTACT") // CONTACT | BUSINESS
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  company   String?
+  message   String?
+  status    String   @default("NEW")
+  locale    Locale   @default(HR)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

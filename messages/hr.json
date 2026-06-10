@@ -115,16 +115,47 @@
     "ctaContact": "Kontaktiraj nas"
   },
   "Business": {
-    "title": "Poslovna ponuda",
-    "lead": "Fleksibilni najam za tvrtke, agencije i duže periode.",
-    "intro": "Nudimo prilagođene uvjete za poslovne korisnike — od dugoročnog najma do paketa za grupe i transfere. Kontaktirajte nas za personaliziranu ponudu.",
-    "f1Title": "Dugoročni najam",
-    "f1Body": "Posebne cijene za najam dulji od mjesec dana, s održavanjem uključenim.",
-    "f2Title": "Flotni najam",
-    "f2Body": "Rješenja za tvrtke kojima treba više vozila uz jedinstven račun.",
-    "f3Title": "Transferi",
-    "f3Body": "Dostava i preuzimanje vozila na zračnoj luci i hotelima.",
-    "cta": "Zatražite ponudu"
+    "eyebrow": "Poslovna ponuda",
+    "title": "Dugoročni najam vozila za vaše poslovanje",
+    "lead": "Profesionalno upravljanje voznim parkom bez opterećenja bilance — fleksibilno, jednostavno i s predvidivim mjesečnim troškom.",
+    "flexTitle": "Fleksibilnost",
+    "flexP1": "Dugoročni najam namijenjen je svim pravnim i fizičkim osobama s ciljem da Vam profesionalnom uslugom olakšamo poslovanje i upravljanje voznim parkom. Fleksibilnost u poslovanju koju nudi naš dugoročni rent a car imperativ je za većinu modernih kompanija.",
+    "flexP2": "U dugoročnom najmu ističemo prednost preuzimanja svih financijskih rizika koji su u slučaju leasinga na vašoj kompaniji. Vaša bilanca nije opterećena, plaćate samo broj dana korištenja vozila, imate kontrolu nad rashodima te jamstvo da, ako vratite vozilo prije dogovorenog vremena, nećete imati dodatnih troškova.",
+    "simpleTitle": "Jednostavnost",
+    "simpleP1": "Ako je vaš posao sezonske prirode, dugoročnim najmom vozila možete optimizirati troškove prema razdobljima koja planirate. Za razliku od leasinga — bez potrebe za dodatnim kapitalom ili financijskim odobrenjem — ako imate potrebu za većim ili manjim brojem vozila, najam realizirate u vrlo kratkom roku, bez prethodne najave i planiranja.",
+    "simpleP2": "Dugoročni najam omogućava minimalne i planirane mjesečne troškove, a definira se mjesečnim trajanjem najma i ugovorenom kilometražom.",
+    "avgAgeLabel": "Godine — prosječna starost naše flote",
+    "minDaysLabel": "Dana — minimalno trajanje najma",
+    "servicesTitle": "Uključene usluge",
+    "servicesSubtitle": "Sve je uključeno u mjesečnu cijenu najma — bez skrivenih troškova.",
+    "services": [
+      "Održavanje",
+      "Registracija",
+      "Osiguranje vozila",
+      "Zamjensko vozilo",
+      "Skladištenje guma",
+      "Upravljanje štetama"
+    ],
+    "compareTitle": "Dugoročni najam vs. klasičan leasing",
+    "compareCol1": "Dugoročni najam",
+    "compareCol2": "Klasičan leasing",
+    "compareRows": [
+      "Bez dokumentacije za odobrenje leasinga i procjene boniteta tvrtke",
+      "Mogućnost privremenog povrata vozila (npr. dulja odsutnost zbog prirode posla, bolovanja, odmora…)",
+      "Mogućnost ranijeg trajnog povrata vozila bez troškova",
+      "Zamjena unajmljenog vozila za drugi model tijekom najma (npr. potreba za većim ili manjim vozilom)",
+      "Redovni servis",
+      "Tehnički pregled i registracija",
+      "Osnovno osiguranje",
+      "Kasko osiguranje",
+      "Zamjensko vozilo u slučaju kvara ili štete",
+      "Asistencija 24/7 u slučaju zamjene vozila",
+      "Zamjena ljetnih i zimskih guma",
+      "Dostava i preuzimanje vozila",
+      "Mobilno jamstvo"
+    ],
+    "ctaTitle": "Svoj sastanak dogovorite još danas",
+    "ctaText": "Ostavite svoje podatke i javit ćemo vam se s personaliziranom ponudom za vaš vozni park. Možete nas kontaktirati i izravno putem WhatsAppa."
   },
   "Terms": {
     "title": "Uvjeti najma",
@@ -151,7 +182,9 @@
     "emailLabel": "Email",
     "locationLabel": "Lokacija",
     "mapHeading": "Gdje se nalazimo",
-    "openMap": "Otvori u Google Maps"
+    "openMap": "Otvori u Google Maps",
+    "formHeading": "Pošaljite nam upit",
+    "formLead": "Unesite svoje podatke i poslat ćemo vam odgovor — ne morate otvarati e-mail. Ako vam je brže, javite se putem WhatsAppa."
   },
   "Common": {
     "from": "od",
@@ -261,5 +294,31 @@
     "subtitle": "Rezervišite vozilo u par klikova — dostupnost potvrđujemo u najkraćem roku.",
     "ctaPrimary": "Rezervirajte vozilo",
     "ctaSecondary": "Nazovite nas"
+  },
+  "Form": {
+    "firstName": "Ime",
+    "firstNamePh": "Vaše ime",
+    "lastName": "Prezime",
+    "lastNamePh": "Vaše prezime",
+    "email": "Email",
+    "emailPh": "vas@email.com",
+    "phone": "Kontakt broj",
+    "phonePh": "+387 ...",
+    "company": "Naziv tvrtke",
+    "companyPh": "Naziv vaše tvrtke",
+    "message": "Poruka",
+    "messagePh": "Kako vam možemo pomoći?",
+    "name": "Ime i prezime",
+    "optional": "opcionalno",
+    "submit": "Pošalji upit",
+    "sending": "Šaljem…",
+    "whatsapp": "WhatsApp",
+    "waIntro": "Upit s web stranice:",
+    "successTitle": "Upit je poslan!",
+    "successText": "Hvala na upitu. Javit ćemo vam se u najkraćem mogućem roku.",
+    "reference": "Broj upita",
+    "sendAnother": "Pošalji novi upit",
+    "errorText": "Došlo je do greške pri slanju. Pokušajte ponovno ili nas kontaktirajte telefonom.",
+    "privacy": "Slanjem obrasca pristajete da vas kontaktiramo u vezi vašeg upita."
   }
 }

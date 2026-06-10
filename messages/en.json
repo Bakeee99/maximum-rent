@@ -115,16 +115,47 @@
     "ctaContact": "Contact us"
   },
   "Business": {
-    "title": "Business offer",
-    "lead": "Flexible rental for companies, agencies and longer periods.",
-    "intro": "We offer tailored terms for business clients — from long-term rental to packages for groups and transfers. Contact us for a personalised quote.",
-    "f1Title": "Long-term rental",
-    "f1Body": "Special rates for rentals over one month, maintenance included.",
-    "f2Title": "Fleet rental",
-    "f2Body": "Solutions for companies needing several vehicles on a single invoice.",
-    "f3Title": "Transfers",
-    "f3Body": "Vehicle delivery and pick-up at the airport and hotels.",
-    "cta": "Request a quote"
+    "eyebrow": "Business offer",
+    "title": "Long-term car rental for your business",
+    "lead": "Professional fleet management without burdening your balance sheet — flexible, simple, and with a predictable monthly cost.",
+    "flexTitle": "Flexibility",
+    "flexP1": "Long-term rental is intended for all legal entities and individuals, with the goal of using a professional service to make your operations and fleet management easier. The flexibility our long-term rent a car offers is a must for most modern companies.",
+    "flexP2": "With long-term rental we highlight the advantage of us assuming all the financial risks that, with leasing, fall on your company. Your balance sheet is not burdened, you pay only for the number of days you use the vehicle, you keep control over expenses, and you have the guarantee that returning the vehicle before the agreed time brings no additional costs.",
+    "simpleTitle": "Simplicity",
+    "simpleP1": "If your business is seasonal, long-term rental lets you optimise costs around the periods you plan for. Unlike leasing — with no need for additional capital or financial approval — if you need more or fewer vehicles, the rental can be arranged at very short notice, without prior announcement or planning.",
+    "simpleP2": "Long-term rental enables minimal, planned monthly costs, defined by the monthly rental term and the agreed mileage.",
+    "avgAgeLabel": "Years — average age of our fleet",
+    "minDaysLabel": "Days — minimum rental period",
+    "servicesTitle": "Included services",
+    "servicesSubtitle": "Everything is included in the monthly rental price — no hidden costs.",
+    "services": [
+      "Maintenance",
+      "Registration",
+      "Vehicle insurance",
+      "Replacement vehicle",
+      "Tyre storage",
+      "Damage management"
+    ],
+    "compareTitle": "Long-term rental vs. classic leasing",
+    "compareCol1": "Long-term rental",
+    "compareCol2": "Classic leasing",
+    "compareRows": [
+      "No documentation for leasing approval or company creditworthiness assessment",
+      "Option to temporarily return the vehicle (e.g. longer absence due to work, sick leave, holidays…)",
+      "Option of early permanent return of the vehicle at no cost",
+      "Swapping the rented vehicle for another model during the rental (e.g. need for a larger or smaller vehicle)",
+      "Regular servicing",
+      "Technical inspection and registration",
+      "Basic insurance",
+      "Comprehensive (collision) insurance",
+      "Replacement vehicle in case of breakdown or damage",
+      "24/7 assistance for vehicle replacement",
+      "Seasonal tyre changeover (summer / winter)",
+      "Vehicle delivery and collection",
+      "Mobility guarantee"
+    ],
+    "ctaTitle": "Arrange your meeting today",
+    "ctaText": "Leave your details and we'll get back to you with a personalised offer for your fleet. You can also reach us directly via WhatsApp."
   },
   "Terms": {
     "title": "Rental terms",
@@ -151,7 +182,9 @@
     "emailLabel": "Email",
     "locationLabel": "Location",
     "mapHeading": "Where to find us",
-    "openMap": "Open in Google Maps"
+    "openMap": "Open in Google Maps",
+    "formHeading": "Send us an inquiry",
+    "formLead": "Enter your details and we'll reply — no need to open your email. If it's quicker for you, reach us via WhatsApp."
   },
   "Common": {
     "from": "from",
@@ -261,5 +294,31 @@
     "subtitle": "Book a vehicle in a few clicks — we confirm availability as soon as possible.",
     "ctaPrimary": "Book a vehicle",
     "ctaSecondary": "Call us"
+  },
+  "Form": {
+    "firstName": "First name",
+    "firstNamePh": "Your first name",
+    "lastName": "Last name",
+    "lastNamePh": "Your last name",
+    "email": "Email",
+    "emailPh": "you@email.com",
+    "phone": "Phone",
+    "phonePh": "+387 ...",
+    "company": "Company",
+    "companyPh": "Your company name",
+    "message": "Message",
+    "messagePh": "How can we help you?",
+    "name": "Name",
+    "optional": "optional",
+    "submit": "Send inquiry",
+    "sending": "Sending…",
+    "whatsapp": "WhatsApp",
+    "waIntro": "Inquiry from the website:",
+    "successTitle": "Inquiry sent!",
+    "successText": "Thank you for your inquiry. We'll get back to you as soon as possible.",
+    "reference": "Reference",
+    "sendAnother": "Send another inquiry",
+    "errorText": "Something went wrong while sending. Please try again or contact us by phone.",
+    "privacy": "By submitting this form you agree to be contacted regarding your inquiry."
   }
 }

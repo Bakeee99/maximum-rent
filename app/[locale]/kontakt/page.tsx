@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Clock, Phone, Mail, MapPin, MessageCircle, ExternalLink } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, ExternalLink } from "lucide-react";
 import { SITE, LOCATIONS } from "@/lib/site-config";
+import { InquiryForm } from "@/components/forms/InquiryForm";
 
 export default async function ContactPage({
   params: { locale },
@@ -10,7 +11,6 @@ export default async function ContactPage({
   setRequestLocale(locale);
   const t = await getTranslations("Contact");
 
-  const whatsappUrl = `https://wa.me/${SITE.whatsapp}`;
   const head = LOCATIONS[0]; // Glavni ured – Čitluk
   const mapSrc = `https://maps.google.com/maps?q=${SITE.map.lat},${SITE.map.lng}&z=15&hl=${locale}&output=embed`;
 
@@ -89,18 +89,14 @@ export default async function ContactPage({
         </div>
       </div>
 
-      {/* WhatsApp CTA */}
-      <div className="mt-6">
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-4 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700 sm:w-auto"
-        >
-          <MessageCircle className="h-5 w-5" />
-          {t("whatsappCta")}
-        </a>
-      </div>
+      {/* Inquiry form */}
+      <section className="mt-12">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
+          {t("formHeading")}
+        </h2>
+        <p className="mt-2 mb-6 max-w-2xl text-muted-foreground">{t("formLead")}</p>
+        <InquiryForm type="contact" />
+      </section>
 
       {/* Interactive map */}
       <div className="mt-14">
