@@ -65,8 +65,8 @@
      end is stronger changes per page. Alpha is theme-aware and kept low. */
   :root {
     --mesh: 227 6 19; /* brand red */
-    --mesh-a: 0.06; /* stronger glow */
-    --mesh-b: 0.04; /* opposite, softer glow */
+    --mesh-a: 0.12; /* stronger glow (visible on white) */
+    --mesh-b: 0.08; /* opposite, softer glow */
   }
   .dark {
     --mesh-a: 0.13;

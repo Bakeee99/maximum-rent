@@ -72,10 +72,12 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
+          {/* Language is always visible (replaces the theme toggle on mobile) */}
+          <LanguageToggle />
+          {/* Theme toggle only from sm and up */}
           <div className="hidden sm:block">
-            <LanguageToggle />
+            <ThemeToggle />
           </div>
-          <ThemeToggle />
           <button
             type="button"
             aria-label={t("menu")}
@@ -113,8 +115,14 @@ export function Navbar() {
                   </Link>
                 </li>
               ))}
-              <li className="px-3 pt-2">
-                <LanguageToggle />
+              {/* Theme switch lives in the menu on mobile (top bar shows language). */}
+              <li className="mt-2 border-t border-border px-3 pt-4 sm:hidden">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium uppercase tracking-wide text-foreground/80">
+                    {t("theme")}
+                  </span>
+                  <ThemeToggle />
+                </div>
               </li>
             </ul>
           </motion.div>
