@@ -10,6 +10,7 @@ import { SITE } from "@/lib/site-config";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { PageBackground } from "@/components/layout/PageBackground";
 
 // latin-ext is REQUIRED for Croatian/Bosnian glyphs (č ć đ š ž).
 const inter = Inter({
@@ -63,6 +64,7 @@ export default async function LocaleLayout({
       <body className="min-h-dvh bg-background font-sans text-foreground antialiased">
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
+            <PageBackground />
             <div className="flex min-h-dvh flex-col">
               <Navbar />
               <main className="flex-1">{children}</main>

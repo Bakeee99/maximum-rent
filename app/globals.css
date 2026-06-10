@@ -59,6 +59,59 @@
     color-scheme: dark;
   }
 
+  /* ---------- Page background: two opposing brand meshes (no grain) ----------
+     Used on every page EXCEPT the homepage (see PageBackground.tsx).
+     Each page shows two soft glows on opposite ends; only the axis and which
+     end is stronger changes per page. Alpha is theme-aware and kept low. */
+  :root {
+    --mesh: 227 6 19; /* brand red */
+    --mesh-a: 0.06; /* stronger glow */
+    --mesh-b: 0.04; /* opposite, softer glow */
+  }
+  .dark {
+    --mesh-a: 0.13;
+    --mesh-b: 0.085;
+  }
+
+  .page-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+  }
+
+  /* Each variant = two meshes on opposite ends of the viewport */
+  .page-bg--tl {
+    /* about — main diagonal, top-left stronger */
+    background-image:
+      radial-gradient(40% 40% at 6% 4%, rgb(var(--mesh) / var(--mesh-a)), transparent 72%),
+      radial-gradient(40% 40% at 94% 96%, rgb(var(--mesh) / var(--mesh-b)), transparent 72%);
+  }
+  .page-bg--tr {
+    /* business — anti-diagonal, top-right stronger */
+    background-image:
+      radial-gradient(40% 40% at 94% 4%, rgb(var(--mesh) / var(--mesh-a)), transparent 72%),
+      radial-gradient(40% 40% at 6% 96%, rgb(var(--mesh) / var(--mesh-b)), transparent 72%);
+  }
+  .page-bg--top {
+    /* fleet — vertical, both soft (cars stay the focus) */
+    background-image:
+      radial-gradient(55% 32% at 50% -2%, rgb(var(--mesh) / var(--mesh-b)), transparent 72%),
+      radial-gradient(55% 32% at 50% 102%, rgb(var(--mesh) / var(--mesh-b)), transparent 72%);
+  }
+  .page-bg--bottom {
+    /* terms — anti-diagonal, bottom-left stronger (opposite of business) */
+    background-image:
+      radial-gradient(40% 40% at 6% 96%, rgb(var(--mesh) / var(--mesh-a)), transparent 72%),
+      radial-gradient(40% 40% at 94% 4%, rgb(var(--mesh) / var(--mesh-b)), transparent 72%);
+  }
+  .page-bg--center {
+    /* contact — main diagonal, bottom-right stronger (opposite of about) */
+    background-image:
+      radial-gradient(40% 40% at 94% 96%, rgb(var(--mesh) / var(--mesh-a)), transparent 72%),
+      radial-gradient(40% 40% at 6% 4%, rgb(var(--mesh) / var(--mesh-b)), transparent 72%);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
