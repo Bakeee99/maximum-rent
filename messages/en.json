@@ -79,7 +79,8 @@
     "locations": "Locations",
     "follow": "Follow us",
     "tagline": "Rent a Car — reliable car rental across Herzegovina.",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "hours": "Working hours"
   },
   "About": {
     "title": "About us",
@@ -121,7 +122,13 @@
     "callUs": "Call us",
     "emailUs": "Write to us",
     "ourOffices": "Our locations",
-    "whatsappCta": "Message us on WhatsApp"
+    "whatsappCta": "Message us on WhatsApp",
+    "hoursLabel": "Working hours",
+    "phonesLabel": "Phones",
+    "emailLabel": "Email",
+    "locationLabel": "Location",
+    "mapHeading": "Where to find us",
+    "openMap": "Open in Google Maps"
   },
   "Common": {
     "from": "from",

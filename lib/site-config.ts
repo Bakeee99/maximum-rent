@@ -10,6 +10,12 @@ export const SITE = {
     { label: "Fax", value: "+387 (0) 36 644 158", href: "tel:+38736644158" },
   ],
   whatsapp: "38763660444", // E.164 digits only
+  hours: "07:30 – 20:30h",
+  map: {
+    lat: 43.2114694,
+    lng: 17.677979,
+    link: "https://maps.app.goo.gl/4Ae8FABt9T1dLbes6",
+  },
   socials: {
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",

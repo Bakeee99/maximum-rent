@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, MessageCircle, ExternalLink } from "lucide-react";
 import { SITE, LOCATIONS } from "@/lib/site-config";
 
 export default async function ContactPage({
@@ -11,9 +11,11 @@ export default async function ContactPage({
   const t = await getTranslations("Contact");
 
   const whatsappUrl = `https://wa.me/${SITE.whatsapp}`;
+  const head = LOCATIONS[0]; // Glavni ured – Čitluk
+  const mapSrc = `https://maps.google.com/maps?q=${SITE.map.lat},${SITE.map.lng}&z=15&hl=${locale}&output=embed`;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
       <header className="max-w-2xl">
         <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           {t("title")}
@@ -21,56 +23,115 @@ export default async function ContactPage({
         <p className="mt-4 text-lg text-muted-foreground">{t("lead")}</p>
       </header>
 
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Phones */}
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-card">
-          <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-foreground">
-            <Phone className="h-5 w-5 text-brand" />
-            {t("callUs")}
-          </h2>
-          <ul className="mt-4 space-y-2">
-            {SITE.phones.map((p) => (
-              <li key={p.value} className="flex items-center justify-between gap-3">
-                <span className="text-sm text-muted-foreground">{p.label}</span>
-                <a
-                  href={p.href}
-                  className="text-sm font-medium text-foreground transition-colors hover:text-brand"
-                >
-                  {p.value}
-                </a>
-              </li>
-            ))}
-          </ul>
+      {/* Quick-info strip */}
+      <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Working hours */}
+        <div className="flex flex-col items-center rounded-2xl border border-border bg-surface p-6 text-center shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+            <Clock className="h-6 w-6" />
+          </span>
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-brand">
+            {t("hoursLabel")}
+          </p>
+          <p className="mt-2 text-sm font-medium text-foreground">{SITE.hours}</p>
         </div>
 
-        {/* Email + WhatsApp */}
-        <div className="flex flex-col gap-6">
-          <div className="rounded-2xl border border-border bg-surface p-6 shadow-card">
-            <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-foreground">
-              <Mail className="h-5 w-5 text-brand" />
-              {t("emailUs")}
-            </h2>
-            <a
-              href={`mailto:${SITE.email}`}
-              className="mt-3 inline-block text-sm font-medium text-foreground transition-colors hover:text-brand"
-            >
-              {SITE.email}
-            </a>
+        {/* Phones */}
+        <div className="flex flex-col items-center rounded-2xl border border-border bg-surface p-6 text-center shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+            <Phone className="h-6 w-6" />
+          </span>
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-brand">
+            {t("phonesLabel")}
+          </p>
+          <div className="mt-2 space-y-1">
+            {SITE.phones.map((p) => (
+              <a
+                key={p.value}
+                href={p.href}
+                className="block text-sm text-muted-foreground transition-colors hover:text-brand"
+              >
+                {p.value}
+              </a>
+            ))}
           </div>
+        </div>
 
+        {/* Email */}
+        <div className="flex flex-col items-center rounded-2xl border border-border bg-surface p-6 text-center shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+            <Mail className="h-6 w-6" />
+          </span>
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-brand">
+            {t("emailLabel")}
+          </p>
           <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-4 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700"
+            href={`mailto:${SITE.email}`}
+            className="mt-2 block break-all text-sm text-muted-foreground transition-colors hover:text-brand"
           >
-            <MessageCircle className="h-5 w-5" />
-            {t("whatsappCta")}
+            {SITE.email}
           </a>
+        </div>
+
+        {/* Location */}
+        <div className="flex flex-col items-center rounded-2xl border border-border bg-surface p-6 text-center shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+            <MapPin className="h-6 w-6" />
+          </span>
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-brand">
+            {t("locationLabel")}
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {head.street}
+            <br />
+            {head.city}
+          </p>
         </div>
       </div>
 
-      {/* Offices */}
+      {/* WhatsApp CTA */}
+      <div className="mt-6">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-4 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700 sm:w-auto"
+        >
+          <MessageCircle className="h-5 w-5" />
+          {t("whatsappCta")}
+        </a>
+      </div>
+
+      {/* Interactive map */}
+      <div className="mt-14">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="flex items-center gap-2 font-display text-2xl font-bold text-foreground">
+            <MapPin className="h-6 w-6 text-brand" />
+            {t("mapHeading")}
+          </h2>
+          <a
+            href={SITE.map.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand transition-colors hover:text-brand-700"
+          >
+            {t("openMap")}
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
+        <div className="relative aspect-[16/11] w-full overflow-hidden rounded-2xl border border-border shadow-card sm:aspect-[21/9] dark:[filter:brightness(0.92)_contrast(1.05)]">
+          <iframe
+            src={mapSrc}
+            title="Maximum Rent a Car — lokacija"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full"
+          />
+        </div>
+      </div>
+
+      {/* All offices */}
       <div className="mt-14">
         <h2 className="flex items-center gap-2 font-display text-2xl font-bold text-foreground">
           <MapPin className="h-6 w-6 text-brand" />

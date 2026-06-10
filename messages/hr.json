@@ -79,7 +79,8 @@
     "locations": "Lokacije",
     "follow": "Pratite nas",
     "tagline": "Rent a Car — pouzdano iznajmljivanje vozila u Hercegovini.",
-    "rights": "Sva prava pridržana."
+    "rights": "Sva prava pridržana.",
+    "hours": "Radno vrijeme"
   },
   "About": {
     "title": "O nama",
@@ -121,7 +122,13 @@
     "callUs": "Nazovite nas",
     "emailUs": "Pišite nam",
     "ourOffices": "Naše lokacije",
-    "whatsappCta": "Pišite nam na WhatsApp"
+    "whatsappCta": "Pišite nam na WhatsApp",
+    "hoursLabel": "Radno vrijeme",
+    "phonesLabel": "Telefoni",
+    "emailLabel": "Email",
+    "locationLabel": "Lokacija",
+    "mapHeading": "Gdje se nalazimo",
+    "openMap": "Otvori u Google Maps"
   },
   "Common": {
     "from": "od",

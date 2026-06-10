@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { SITE, LOCATIONS, NAV_LINKS } from "@/lib/site-config";
 
@@ -61,6 +61,16 @@ export function Footer() {
               </a>
             </li>
           </ul>
+
+          <div className="flex items-start gap-2.5 pt-1 text-sm">
+            <Clock className="h-4 w-4 shrink-0 text-brand" />
+            <span className="text-muted-foreground">
+              <span className="block text-xs font-medium uppercase tracking-wide text-foreground/70">
+                {t("hours")}
+              </span>
+              {SITE.hours}
+            </span>
+          </div>
         </div>
 
         {/* Locations */}
