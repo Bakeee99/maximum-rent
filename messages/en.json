@@ -83,13 +83,36 @@
     "hours": "Working hours"
   },
   "About": {
-    "title": "About us",
-    "lead": "Maximum Rent a Car — your mobility partner in Herzegovina.",
-    "p1": "For years we have provided car rental with a focus on reliability, a spotless fleet, and fast, friendly service. Our fleet ranges from 25 to 30 vehicles, from economical city cars to luxury saloons and SUVs.",
-    "p2": "Pick-up and return is available at six locations across Herzegovina, including Mostar Airport and the main bus stations, making your trip effortless from the moment you arrive.",
-    "stat1": "vehicles in fleet",
-    "stat2": "locations",
-    "stat3": "support"
+    "eyebrow": "About us",
+    "title": "Reliable car rental in the heart of Herzegovina",
+    "lead": "MAXIMUM RENT A CAR d.o.o. was founded in April 2009. Through professional service and a high-quality, reliable fleet that we expand every day, we have built a recognisable image for our company. Our core motto is the satisfaction of every client — the main factor that drives us toward perfecting our services.",
+    "intro2": "We are based in Međugorje, the largest religious and tourist centre not only in Bosnia and Herzegovina but in this part of Europe. Besides Međugorje, vehicles can also be collected in Mostar, at Mostar Airport, and in Čitluk, Ljubuški and Čapljina.",
+    "stats": {
+      "clientsLabel": "Happy clients",
+      "yearsLabel": "Years with you",
+      "carsLabel": "Vehicles in the fleet",
+      "branchesLabel": "Locations"
+    },
+    "storyTitle": "Who we are",
+    "storyP1": "MAXIMUM RENT A CAR d.o.o. is defined by an exceptionally high-quality fleet and friendly staff, always ready to meet every client's request. We work 365 days a year and are available to you even outside business hours.",
+    "storyP2": "For everyone who comes to Međugorje, whether for tourism or business, our company is fully at your disposal. You can read all rental terms and other information on our website, or contact us through the contact form, where our phone numbers are also listed.",
+    "features": {
+      "f1Title": "Available 365 days",
+      "f1Text": "We work every day of the year and accommodate you even outside business hours.",
+      "f2Title": "Six locations",
+      "f2Text": "Collection in Međugorje, Mostar, at Mostar Airport, and in Čitluk, Ljubuški and Čapljina.",
+      "f3Title": "Reliable fleet",
+      "f3Text": "High-quality vehicles that are regularly maintained and renewed.",
+      "f4Title": "Customer satisfaction",
+      "f4Text": "The satisfaction of every client is the main factor behind everything we do."
+    },
+    "mapTitle": "Where to find us",
+    "mapText": "Our head office is in Čitluk, and you can collect a vehicle at six locations across Herzegovina.",
+    "openMap": "Open in Google Maps",
+    "ctaTitle": "Ready to hit the road?",
+    "ctaText": "Browse our fleet or get in touch — we'll be glad to help you choose.",
+    "ctaFleet": "View the fleet",
+    "ctaContact": "Contact us"
   },
   "Business": {
     "title": "Business offer",

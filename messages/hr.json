@@ -83,13 +83,36 @@
     "hours": "Radno vrijeme"
   },
   "About": {
-    "title": "O nama",
-    "lead": "Maximum Rent a Car — vaš partner za mobilnost u Hercegovini.",
-    "p1": "Već godinama pružamo uslugu iznajmljivanja vozila s naglaskom na pouzdanost, čistoću voznog parka i brzu, ljubaznu uslugu. Naš vozni park broji od 25 do 30 vozila, od ekonomičnih gradskih automobila do luksuznih limuzina i SUV-ova.",
-    "p2": "Preuzimanje i povrat vozila moguć je na šest lokacija diljem Hercegovine, uključujući zračnu luku Mostar i glavne autobusne kolodvore, što vaše putovanje čini jednostavnim od trenutka dolaska.",
-    "stat1": "vozila u parku",
-    "stat2": "lokacije",
-    "stat3": "podrška"
+    "eyebrow": "O nama",
+    "title": "Pouzdan najam vozila u srcu Hercegovine",
+    "lead": "MAXIMUM RENT A CAR d.o.o. firma je osnovana u travnju 2009. godine. Pružanjem profesionalne usluge uz visokokvalitetan i pouzdan vozni park, koji se svakodnevno proširuje, gradimo prepoznatljiv imidž svoje tvrtke. Osnovni moto naše firme jest zadovoljstvo svakog klijenta — glavni faktor koji nas gura ka savršenstvu naših usluga.",
+    "intro2": "Nalazimo se u Međugorju, najvećem vjerskom i turističkom središtu ne samo u Bosni i Hercegovini, nego i u ovom dijelu Europe. Osim u Međugorju, preuzimanje vozila moguće je i u Mostaru, na Zračnoj luci Mostar te u Čitluku, Ljubuškom i Čapljini.",
+    "stats": {
+      "clientsLabel": "Zadovoljnih klijenata",
+      "yearsLabel": "Godina s vama",
+      "carsLabel": "Vozila u floti",
+      "branchesLabel": "Lokacija"
+    },
+    "storyTitle": "Tko smo mi",
+    "storyP1": "MAXIMUM RENT A CAR d.o.o. odlikuje izrazito kvalitetan vozni park te ljubazno osoblje, uvijek spremno odgovoriti na sve zahtjeve klijenata. Radimo 365 dana u godini i dostupni smo vam i izvan radnog vremena.",
+    "storyP2": "Svima koji u Međugorje dolaze turistički ili poslovno naša firma stoji potpuno na raspolaganju. Sve uvjete vezane uz najam i ostale informacije možete pročitati na našim stranicama ili nas kontaktirati putem kontakt-forme, gdje su navedeni i naši brojevi telefona.",
+    "features": {
+      "f1Title": "Dostupni 365 dana",
+      "f1Text": "Radimo svaki dan u godini i izlazimo u susret i izvan radnog vremena.",
+      "f2Title": "Šest lokacija",
+      "f2Text": "Preuzimanje u Međugorju, Mostaru, na Zračnoj luci Mostar te u Čitluku, Ljubuškom i Čapljini.",
+      "f3Title": "Pouzdan vozni park",
+      "f3Text": "Visokokvalitetna vozila koja se redovito održavaju i obnavljaju.",
+      "f4Title": "Zadovoljstvo klijenta",
+      "f4Text": "Zadovoljstvo svakog klijenta glavni je faktor svega što radimo."
+    },
+    "mapTitle": "Gdje nas možete pronaći",
+    "mapText": "Naš glavni ured nalazi se u Čitluku, a vozilo možete preuzeti na šest lokacija diljem Hercegovine.",
+    "openMap": "Otvori u Google Maps",
+    "ctaTitle": "Spremni za put?",
+    "ctaText": "Pogledajte našu ponudu vozila ili nam se javite — rado ćemo vam pomoći pri odabiru.",
+    "ctaFleet": "Pogledaj vozila",
+    "ctaContact": "Kontaktiraj nas"
   },
   "Business": {
     "title": "Poslovna ponuda",
