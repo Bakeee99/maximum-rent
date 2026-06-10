@@ -110,7 +110,17 @@ export function Footer() {
           <span>
             © {year} {SITE.name}. {t("rights")}
           </span>
-          <span>{SITE.domain}</span>
+          <span>
+            Powered and designed by{" "}
+            <a
+              href="https://mehiccdev.com"
+              target="_blank"
+              rel="noopener"
+              className="font-semibold text-brand underline decoration-brand/40 decoration-1 underline-offset-4 transition-colors hover:text-brand-700 hover:decoration-brand"
+            >
+              mehiccdev
+            </a>
+          </span>
         </div>
       </div>
     </footer>
