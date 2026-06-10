@@ -40,8 +40,8 @@ export function Navbar() {
           <Image
             src="/logo.png"
             alt="Maximum Rent a Car"
-            width={170}
-            height={48}
+            width={800}
+            height={239}
             priority
             className="h-9 w-auto lg:h-10"
           />

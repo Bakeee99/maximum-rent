@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -13,9 +14,13 @@ export function Footer() {
       <div className="container grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1.4fr_0.8fr]">
         {/* Brand + nav */}
         <div className="space-y-4">
-          <span className="font-display text-xl font-bold tracking-tight">
-            MAXIMUM<span className="text-brand"> RENT A CAR</span>
-          </span>
+          <Image
+            src="/logo.png"
+            alt="Maximum Rent a Car"
+            width={800}
+            height={239}
+            className="h-11 w-auto"
+          />
           <p className="max-w-xs text-sm text-muted-foreground">{t("tagline")}</p>
           <ul className="flex flex-col gap-1.5 pt-2">
             {NAV_LINKS.map((link) => (
