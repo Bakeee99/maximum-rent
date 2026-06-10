@@ -14,8 +14,9 @@ export function LanguageToggle() {
   function switchTo(next: AppLocale) {
     if (next === locale) return;
     startTransition(() => {
-      // next-intl preserves the path and swaps the locale prefix.
-      router.replace(pathname, { locale: next });
+      // Swap the locale prefix but keep the path AND the scroll position
+      // (scroll: false stops Next from jumping back to the top).
+      router.replace(pathname, { locale: next, scroll: false });
     });
   }
 

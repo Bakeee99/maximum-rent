@@ -128,7 +128,8 @@
     "perDay": "day",
     "loading": "Loading...",
     "backHome": "Back to home",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "backToTop": "Back to top"
   },
   "WhyChoose": {
     "eyebrow": "Why Maximum",

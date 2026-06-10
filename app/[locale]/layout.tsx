@@ -11,6 +11,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PageBackground } from "@/components/layout/PageBackground";
+import { BackToTop } from "@/components/layout/BackToTop";
 
 // latin-ext is REQUIRED for Croatian/Bosnian glyphs (č ć đ š ž).
 const inter = Inter({
@@ -70,6 +71,7 @@ export default async function LocaleLayout({
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
+            <BackToTop />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

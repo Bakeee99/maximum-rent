@@ -128,7 +128,8 @@
     "perDay": "dan",
     "loading": "Učitavanje...",
     "backHome": "Povratak na početnu",
-    "notFound": "Stranica nije pronađena"
+    "notFound": "Stranica nije pronađena",
+    "backToTop": "Nazad na vrh"
   },
   "WhyChoose": {
     "eyebrow": "Zašto Maximum",
