@@ -37,7 +37,6 @@ export const metadata: Metadata = {
     description:
       "Premium najam vozila u Hercegovini — preuzimanje na 6 lokacija.",
   },
-  icons: { icon: "/favicon.ico" },
 };
 
 export function generateStaticParams() {
