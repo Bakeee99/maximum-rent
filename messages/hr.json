@@ -16,7 +16,11 @@
     "subtitle": "Premium vozni park, preuzimanje na 6 lokacija i rezervacija bez kompromisa. Od gradskih automobila do luksuznih limuzina.",
     "ctaSearch": "Rezervirajte vozilo",
     "ctaFleet": "Pogledajte vozni park",
-    "scroll": "Krenite"
+    "scroll": "Krenite",
+    "reviews": "Google recenzija",
+    "open": "Otvoreno",
+    "closed": "Zatvoreno",
+    "localTime": "lokalno"
   },
   "Search": {
     "title": "Pronađite svoje vozilo",

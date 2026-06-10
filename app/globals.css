@@ -46,9 +46,15 @@
      alone so Framer Motion animations stay snappy. Elements that already
      carry a Tailwind transition utility (buttons, cards) keep their own
      timing because a class selector outranks the universal selector. */
-  *,
-  *::before,
-  *::after {
+  /* Cross-fade colors ONLY during an explicit theme switch. The toggle adds
+     `.theme-transition` to <html> for ~320ms. This removes any transition on
+     first paint / route changes — which previously made icons and text look
+     like they "loaded twice" as they faded from a default to the themed color.
+     Transform & opacity are never transitioned so Framer Motion stays snappy. */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
     transition-property: background-color, border-color, color, fill, stroke;
     transition-duration: 300ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

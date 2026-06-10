@@ -14,11 +14,20 @@ export function ThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
 
+  function toggle() {
+    // Enable color transitions only for the duration of the switch, then
+    // remove the class so nothing transitions on load or navigation.
+    const html = document.documentElement;
+    html.classList.add("theme-transition");
+    setTheme(isDark ? "light" : "dark");
+    window.setTimeout(() => html.classList.remove("theme-transition"), 340);
+  }
+
   return (
     <button
       type="button"
       aria-label={t("theme")}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={toggle}
       className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-foreground/80 transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {/* Avoid hydration mismatch: render a neutral icon until mounted */}

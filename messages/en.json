@@ -16,7 +16,11 @@
     "subtitle": "A premium fleet, pick-up at 6 locations, and booking without compromise. From city cars to luxury saloons.",
     "ctaSearch": "Book a vehicle",
     "ctaFleet": "View the fleet",
-    "scroll": "Explore"
+    "scroll": "Explore",
+    "reviews": "Google reviews",
+    "open": "Open",
+    "closed": "Closed",
+    "localTime": "local"
   },
   "Search": {
     "title": "Find your vehicle",

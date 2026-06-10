@@ -1,15 +1,78 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { ArrowRight, ChevronDown, Star } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { SITE } from "@/lib/site-config";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+// Agency opening window in minutes from midnight (07:30 – 20:30, local).
+const OPEN_MIN = 7 * 60 + 30;
+const CLOSE_MIN = 20 * 60 + 30;
+const TZ = "Europe/Sarajevo";
+
+/** Live local time + open/closed badge (shows the agency's local time, so
+ *  visitors in other time zones know whether it's worth calling now). */
+function OpenStatus({
+  openLabel,
+  closedLabel,
+  localLabel,
+}: {
+  openLabel: string;
+  closedLabel: string;
+  localLabel: string;
+}) {
+  const [state, setState] = useState<{ time: string; open: boolean } | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const compute = () => {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: TZ,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).formatToParts(new Date());
+      const h = Number(parts.find((p) => p.type === "hour")?.value ?? "0");
+      const m = Number(parts.find((p) => p.type === "minute")?.value ?? "0");
+      const mins = h * 60 + m;
+      setState({
+        time: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
+        open: mins >= OPEN_MIN && mins < CLOSE_MIN,
+      });
+    };
+    compute();
+    const id = setInterval(compute, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Render nothing until mounted to avoid a server/client clock mismatch.
+  if (!state) return null;
+
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur">
+      <span
+        className={`h-2 w-2 rounded-full ${
+          state.open ? "bg-emerald-400 animate-pulse" : "bg-red-400"
+        }`}
+      />
+      <span className="font-medium text-white">
+        {state.open ? openLabel : closedLabel}
+      </span>
+      <span className="text-white/60">
+        · {state.time} {localLabel}
+      </span>
+    </span>
+  );
+}
+
 export function Hero() {
   const t = useTranslations("Hero");
+  const locale = useLocale();
 
   const ytSrc =
     `https://www.youtube-nocookie.com/embed/${SITE.youtubeId}` +
@@ -80,6 +143,40 @@ export function Hero() {
           >
             {t("ctaFleet")}
           </Link>
+        </motion.div>
+
+        {/* Trust row: Google rating + live open/closed status */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.28, ease }}
+          className="mt-7 flex flex-wrap items-center gap-3 text-sm"
+        >
+          <a
+            href={SITE.map.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${SITE.rating.score} / 5 — ${SITE.rating.count} ${t("reviews")}`}
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur transition-colors hover:bg-white/10"
+          >
+            <span className="flex items-center gap-0.5 text-amber-400">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="h-3.5 w-3.5 fill-current" />
+              ))}
+            </span>
+            <span className="font-semibold text-white">
+              {SITE.rating.score.toLocaleString(locale)}
+            </span>
+            <span className="text-white/70">
+              · {SITE.rating.count} {t("reviews")}
+            </span>
+          </a>
+
+          <OpenStatus
+            openLabel={t("open")}
+            closedLabel={t("closed")}
+            localLabel={t("localTime")}
+          />
         </motion.div>
       </div>
 

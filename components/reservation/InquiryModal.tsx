@@ -175,7 +175,7 @@ export function InquiryModal({ car, search, onClose }: Props) {
                 className="mt-5 space-y-4"
               >
                 {/* Dates */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
                     <label className={lbl}>{t("summaryPickup")}</label>
                     <div className="flex gap-2">
@@ -184,14 +184,14 @@ export function InquiryModal({ car, search, onClose }: Props) {
                         value={pickupDate}
                         min={splitISO(undefined, 0).date}
                         onChange={(e) => setPickupDate(e.target.value)}
-                        className={input}
+                        className={`${input} min-w-0 flex-1`}
                         required
                       />
                       <input
                         type="time"
                         value={pickupTime}
                         onChange={(e) => setPickupTime(e.target.value)}
-                        className={`${input} w-24`}
+                        className={`${input} w-[104px] min-w-0 flex-none`}
                         required
                       />
                     </div>
@@ -204,14 +204,14 @@ export function InquiryModal({ car, search, onClose }: Props) {
                         value={returnDate}
                         min={pickupDate}
                         onChange={(e) => setReturnDate(e.target.value)}
-                        className={input}
+                        className={`${input} min-w-0 flex-1`}
                         required
                       />
                       <input
                         type="time"
                         value={returnTime}
                         onChange={(e) => setReturnTime(e.target.value)}
-                        className={`${input} w-24`}
+                        className={`${input} w-[104px] min-w-0 flex-none`}
                         required
                       />
                     </div>

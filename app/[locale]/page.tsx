@@ -34,7 +34,7 @@ export default async function HomePage({
     prisma.car.findMany({
       where: { isAvailable: true, isFeatured: true },
       orderBy: { sortOrder: "asc" },
-      take: 6,
+      take: 3,
     }),
   ]);
 

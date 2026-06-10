@@ -16,6 +16,7 @@ export const SITE = {
     lng: 17.677979,
     link: "https://maps.app.goo.gl/4Ae8FABt9T1dLbes6",
   },
+  rating: { score: 4.8, count: 108 },
   socials: {
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",
