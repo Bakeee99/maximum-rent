@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Loader2, Send, X } from "lucide-react";
+import { Check, ChevronDown, Loader2, Send, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { AppLocale } from "@/i18n/routing";
 import type { CarListItem, SearchContext } from "@/lib/types";
@@ -14,11 +14,27 @@ type Props = {
   onClose: () => void;
 };
 
+// 24-hour, 30-minute slots (00:00 → 23:30). A native <select> keeps a
+// predictable width on every browser, unlike iOS <input type="time">.
+const pad = (n: number) => String(n).padStart(2, "0");
+const TIME_SLOTS = Array.from(
+  { length: 48 },
+  (_, i) => `${pad(Math.floor(i / 2))}:${i % 2 ? "30" : "00"}`,
+);
+
 function splitISO(iso?: string | null, fallbackOffsetDays = 1) {
   const d = iso ? new Date(iso) : new Date(Date.now() + fallbackOffsetDays * 86_400_000);
   const date = d.toISOString().slice(0, 10);
   const time = d.toTimeString().slice(0, 5);
   return { date, time };
+}
+
+// Snap any "HH:MM" to the nearest valid 30-minute slot so it matches a
+// dropdown option (00:00 → 23:30).
+function snapTime(t: string) {
+  const [h, m] = t.split(":").map(Number);
+  const total = Math.min(Math.round((h * 60 + m) / 30) * 30, 23 * 60 + 30);
+  return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;
 }
 
 export function InquiryModal({ car, search, onClose }: Props) {
@@ -29,9 +45,9 @@ export function InquiryModal({ car, search, onClose }: Props) {
   const initReturn = useMemo(() => splitISO(search?.returnAt, 3), [search?.returnAt]);
 
   const [pickupDate, setPickupDate] = useState(initPickup.date);
-  const [pickupTime, setPickupTime] = useState(initPickup.time);
+  const [pickupTime, setPickupTime] = useState(snapTime(initPickup.time));
   const [returnDate, setReturnDate] = useState(initReturn.date);
-  const [returnTime, setReturnTime] = useState(initReturn.time);
+  const [returnTime, setReturnTime] = useState(snapTime(initReturn.time));
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -175,45 +191,61 @@ export function InquiryModal({ car, search, onClose }: Props) {
                 className="mt-5 space-y-4"
               >
                 {/* Dates */}
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className={lbl}>{t("summaryPickup")}</label>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-[minmax(0,1fr)_7rem] gap-2">
                       <input
                         type="date"
                         value={pickupDate}
                         min={splitISO(undefined, 0).date}
                         onChange={(e) => setPickupDate(e.target.value)}
-                        className={`${input} min-w-0 flex-1`}
+                        className={`${input} w-full`}
                         required
                       />
-                      <input
-                        type="time"
-                        value={pickupTime}
-                        onChange={(e) => setPickupTime(e.target.value)}
-                        className={`${input} w-[104px] min-w-0 flex-none`}
-                        required
-                      />
+                      <div className="relative">
+                        <select
+                          value={pickupTime}
+                          onChange={(e) => setPickupTime(e.target.value)}
+                          className={`${input} w-full appearance-none pr-8`}
+                          required
+                        >
+                          {TIME_SLOTS.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      </div>
                     </div>
                   </div>
                   <div>
                     <label className={lbl}>{t("summaryReturn")}</label>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-[minmax(0,1fr)_7rem] gap-2">
                       <input
                         type="date"
                         value={returnDate}
                         min={pickupDate}
                         onChange={(e) => setReturnDate(e.target.value)}
-                        className={`${input} min-w-0 flex-1`}
+                        className={`${input} w-full`}
                         required
                       />
-                      <input
-                        type="time"
-                        value={returnTime}
-                        onChange={(e) => setReturnTime(e.target.value)}
-                        className={`${input} w-[104px] min-w-0 flex-none`}
-                        required
-                      />
+                      <div className="relative">
+                        <select
+                          value={returnTime}
+                          onChange={(e) => setReturnTime(e.target.value)}
+                          className={`${input} w-full appearance-none pr-8`}
+                          required
+                        >
+                          {TIME_SLOTS.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      </div>
                     </div>
                   </div>
                 </div>
