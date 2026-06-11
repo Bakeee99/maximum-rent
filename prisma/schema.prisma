@@ -127,6 +127,7 @@ model Car {
   updatedAt     DateTime     @updatedAt
 
   inquiries Inquiry[]
+  blocks    CarBlock[]
 
   @@index([carClass, isAvailable])
   @@index([isFeatured, sortOrder])
@@ -164,6 +165,24 @@ model Inquiry {
 
   @@index([status, createdAt])
   @@index([carId])
+  // Fast overlap lookups for availability (CONFIRMED reservations only).
+  @@index([carId, status, pickupAt, returnAt])
+}
+
+// Manual unavailability window for a car (service, damage, internal use).
+// Day-granularity: [startAt, endAt) in UTC. Treated exactly like a CONFIRMED
+// reservation when computing availability. Kept as a small dedicated model
+// instead of a client-less Inquiry so inquiry validation stays strict.
+model CarBlock {
+  id        String   @id @default(cuid())
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId     String
+  startAt   DateTime
+  endAt     DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([carId, startAt, endAt])
 }
 
 // General contact / business inquiries sent from the website forms.

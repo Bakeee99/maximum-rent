@@ -1,7 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { AlertTriangle } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 import { toCarListItem, type SearchContext } from "@/lib/types";
+import { getAvailableCars, isValidPeriod } from "@/lib/availability";
 import { ReservationSearchForm } from "@/components/reservation/ReservationSearchForm";
 import { ReservationSummary } from "@/components/reservation/ReservationSummary";
 import { FleetGrid } from "@/components/fleet/FleetGrid";
@@ -31,11 +33,23 @@ export default async function VehiclesPage({
   const pickupAtRaw = one(searchParams.pickupAt);
   const returnAtRaw = one(searchParams.returnAt);
 
+  const hasDates = isValidISO(pickupAtRaw) && isValidISO(returnAtRaw);
+  const pickupDate = hasDates ? new Date(pickupAtRaw) : null;
+  const returnDate = hasDates ? new Date(returnAtRaw) : null;
+  // Dates present but return <= pickup → show a friendly notice + all cars.
+  const periodValid =
+    !!pickupDate && !!returnDate && isValidPeriod(pickupDate, returnDate);
+  const periodInvalid = hasDates && !periodValid;
+
   const [cars, locations] = await Promise.all([
-    prisma.car.findMany({
-      where: { isAvailable: true },
-      orderBy: { sortOrder: "asc" },
-    }),
+    periodValid
+      ? getAvailableCars(pickupDate!, returnDate!)
+      : prisma.car
+          .findMany({
+            where: { isAvailable: true },
+            orderBy: { sortOrder: "asc" },
+          })
+          .then((rows) => rows.map(toCarListItem)),
     prisma.location.findMany({
       where: { isActive: true },
       orderBy: { sortOrder: "asc" },
@@ -47,32 +61,37 @@ export default async function VehiclesPage({
   const pickupLocation = pickupLocationId ? byId.get(pickupLocationId) : null;
   const returnLocation = returnLocationId ? byId.get(returnLocationId) : null;
 
-  const hasDates = isValidISO(pickupAtRaw) && isValidISO(returnAtRaw);
-
   const search: SearchContext = {
     pickupLocationId,
     returnLocationId,
     pickupLocation: pickupLocation ? { name: pickupLocation.name } : null,
     returnLocation: returnLocation ? { name: returnLocation.name } : null,
-    pickupAt: hasDates ? pickupAtRaw : null,
-    returnAt: hasDates ? returnAtRaw : null,
+    pickupAt: periodValid ? pickupAtRaw : null,
+    returnAt: periodValid ? returnAtRaw : null,
   };
 
-  const items = cars.map(toCarListItem);
-  const heading = hasDates ? t("resultsTitle") : t("allVehicles");
+  const items = cars;
+  const heading = periodValid ? t("resultsTitle") : t("allVehicles");
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
       <ReservationSearchForm locations={locations} />
 
-      {hasDates && (
+      {periodValid && (
         <div className="mt-8">
           <ReservationSummary
-            pickupAt={pickupAtRaw}
-            returnAt={returnAtRaw}
+            pickupAt={pickupAtRaw!}
+            returnAt={returnAtRaw!}
             pickupName={pickupLocation?.name}
             returnName={returnLocation?.name}
           />
+        </div>
+      )}
+
+      {periodInvalid && (
+        <div className="mt-8 flex items-start gap-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+          <p>{t("invalidPeriod")}</p>
         </div>
       )}
 

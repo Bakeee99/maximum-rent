@@ -66,7 +66,8 @@
       "TRANSPORT": "Transport",
       "MINIBUS": "Minibus"
     },
-    "swipeHint": "Prevucite za više"
+    "swipeHint": "Prevucite za više",
+    "invalidPeriod": "Odabrani period nije ispravan — datum povrata mora biti nakon preuzimanja. Prikazujemo sva vozila."
   },
   "Inquiry": {
     "title": "Upit za rezervaciju",
