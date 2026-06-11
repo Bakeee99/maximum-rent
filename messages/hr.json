@@ -52,7 +52,21 @@
     "year": "Godište",
     "gearbox": "Mjenjač",
     "seats": "Putnika",
-    "fuel": "Gorivo"
+    "fuel": "Gorivo",
+    "filterLabel": "Filtriraj po tipu",
+    "all": "Sve",
+    "categories": {
+      "LIMUZINA": "Limuzina",
+      "LUXURY": "Luksuzni",
+      "SUV": "SUV",
+      "COUPE": "Coupe",
+      "COMPACT": "Kompakt",
+      "KARAVAN": "Karavan",
+      "CABRIO": "Kabriolet",
+      "TRANSPORT": "Transport",
+      "MINIBUS": "Minibus"
+    },
+    "swipeHint": "Prevucite za više"
   },
   "Inquiry": {
     "title": "Upit za rezervaciju",

@@ -74,21 +74,25 @@ export function Hero() {
   const t = useTranslations("Hero");
   const locale = useLocale();
 
-  const ytSrc =
-    `https://www.youtube-nocookie.com/embed/${SITE.youtubeId}` +
-    `?autoplay=1&mute=1&controls=0&loop=1&playlist=${SITE.youtubeId}` +
-    `&playsinline=1&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`;
-
   return (
     <section className="relative flex min-h-[92vh] items-center overflow-hidden">
-      {/* Background video */}
+      {/* Background video — self-hosted, autoplay + loop, no player UI.
+          Loads far faster than a YouTube embed and has no controls/branding. */}
       <div className="absolute inset-0 -z-10 bg-black">
-        <iframe
-          title="Maximum Rent a Car"
-          src={ytSrc}
-          allow="autoplay; encrypted-media"
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          aria-hidden
+          tabIndex={-1}
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/hero.webm" type="video/webm" />
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
       </div>
 
       {/* Overlays: darken for legibility + fade into the page background */}

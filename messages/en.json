@@ -52,7 +52,21 @@
     "year": "Year",
     "gearbox": "Gearbox",
     "seats": "Seats",
-    "fuel": "Fuel"
+    "fuel": "Fuel",
+    "filterLabel": "Filter by type",
+    "all": "All",
+    "categories": {
+      "LIMUZINA": "Sedan",
+      "LUXURY": "Luxury",
+      "SUV": "SUV",
+      "COUPE": "Coupe",
+      "COMPACT": "Compact",
+      "KARAVAN": "Estate",
+      "CABRIO": "Convertible",
+      "TRANSPORT": "Transport",
+      "MINIBUS": "Minibus"
+    },
+    "swipeHint": "Swipe for more"
   },
   "Inquiry": {
     "title": "Reservation inquiry",

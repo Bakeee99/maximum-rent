@@ -25,6 +25,20 @@ enum CarClass {
   MINIBUS
 }
 
+// Filterable vehicle types. A car can belong to several at once
+// (e.g. a luxury sedan = [LIMUZINA, LUXURY]).
+enum CarCategory {
+  LIMUZINA
+  LUXURY
+  SUV
+  COUPE
+  COMPACT
+  KARAVAN
+  CABRIO
+  TRANSPORT
+  MINIBUS
+}
+
 enum Transmission {
   MANUAL
   AUTOMATIC
@@ -92,6 +106,7 @@ model Car {
   title         String
   year          Int
   carClass      CarClass
+  categories    CarCategory[] @default([])
   transmission  Transmission
   passengers    Int
   doors         Int          @default(4)
