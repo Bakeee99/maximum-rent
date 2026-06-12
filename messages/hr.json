@@ -67,7 +67,8 @@
       "MINIBUS": "Minibus"
     },
     "swipeHint": "Prevucite za više",
-    "invalidPeriod": "Odabrani period nije ispravan — datum povrata mora biti nakon preuzimanja. Prikazujemo sva vozila."
+    "invalidPeriod": "Odabrani period nije ispravan — datum povrata mora biti nakon preuzimanja. Prikazujemo sva vozila.",
+    "viewAll": "Pogledajte sva vozila"
   },
   "Inquiry": {
     "title": "Upit za rezervaciju",
@@ -83,7 +84,7 @@
     "or": "ili",
     "sending": "Slanje...",
     "success": "Upit je zaprimljen!",
-    "successBody": "Hvala. Naš tim će vam se javiti uskoro s potvrdom dostupnosti.",
+    "successBody": "Hvala! Vaš upit je zaprimljen. Potvrdu rezervacije ćete dobiti na email — molimo pratite svoj inbox (provjerite i spam/junk folder).",
     "errRequired": "Obavezno polje",
     "errEmail": "Unesite ispravan email",
     "errPhone": "Unesite ispravan broj telefona",

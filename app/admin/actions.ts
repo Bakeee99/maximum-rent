@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ADMIN_COOKIE, tokenValid } from "@/lib/admin-auth";
+import { sendReservationDecisionEmail } from "@/lib/email";
 
 // Defense in depth: middleware already guards /admin, but server actions are
 // HTTP endpoints of their own — re-check the session cookie in each one.
@@ -13,23 +14,73 @@ async function requireAdmin() {
   if (!ok) redirect("/admin/login");
 }
 
+function filtersFrom(formData: FormData) {
+  return {
+    status: String(formData.get("statusFilter") ?? "pending"),
+    range: String(formData.get("rangeFilter") ?? "all"),
+  };
+}
+
 function backTo(params: Record<string, string>) {
   const qs = new URLSearchParams(params).toString();
   redirect(`/admin${qs ? `?${qs}` : ""}`);
 }
 
+type DecisionEmailRow = {
+  reference: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  pickupAt: Date;
+  returnAt: Date;
+  locale: "HR" | "EN";
+  carTitle: string | null;
+};
+
+function toDecisionRow(q: {
+  reference: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  pickupAt: Date;
+  returnAt: Date;
+  locale: string;
+  carTitleSnapshot: string | null;
+  car: { title: string } | null;
+}): DecisionEmailRow {
+  return {
+    reference: q.reference,
+    firstName: q.firstName,
+    lastName: q.lastName,
+    email: q.email,
+    pickupAt: q.pickupAt,
+    returnAt: q.returnAt,
+    locale: q.locale === "EN" ? "EN" : "HR",
+    carTitle: q.car?.title ?? q.carTitleSnapshot,
+  };
+}
+
 /** PENDING/CONTACTED → CONFIRMED, with an overlap re-check inside a
- *  transaction so two admins can't double-book the same car. */
+ *  transaction so two admins can't double-book the same car. Sends the
+ *  client a confirmation email afterwards (failures logged, never fatal). */
 export async function confirmInquiry(formData: FormData) {
   await requireAdmin();
+  const { status, range } = filtersFrom(formData);
   const id = String(formData.get("id") ?? "");
-  const status = String(formData.get("statusFilter") ?? "pending");
-  if (!id) backTo({ status, msg: "error" });
+  if (!id) backTo({ status, range, msg: "error" });
 
-  const result = await prisma.$transaction(async (tx) => {
-    const inquiry = await tx.inquiry.findUnique({ where: { id } });
-    if (!inquiry || inquiry.status === "CANCELLED") return "error" as const;
-    if (inquiry.status === "CONFIRMED") return "confirmed" as const;
+  const outcome = await prisma.$transaction(async (tx) => {
+    const inquiry = await tx.inquiry.findUnique({
+      where: { id },
+      include: { car: { select: { title: true } } },
+    });
+    if (!inquiry || inquiry.status === "CANCELLED") {
+      return { msg: "error" as const, email: null };
+    }
+    // Idempotent re-click: already confirmed → no second email.
+    if (inquiry.status === "CONFIRMED") {
+      return { msg: "confirmed" as const, email: null };
+    }
 
     if (inquiry.carId) {
       const [conflictsRes, conflictsBlk] = await Promise.all([
@@ -50,33 +101,66 @@ export async function confirmInquiry(formData: FormData) {
           },
         }),
       ]);
-      if (conflictsRes > 0 || conflictsBlk > 0) return "conflict" as const;
+      if (conflictsRes > 0 || conflictsBlk > 0) {
+        return { msg: "conflict" as const, email: null };
+      }
     }
 
     await tx.inquiry.update({
       where: { id: inquiry.id },
       data: { status: "CONFIRMED" },
     });
-    return "confirmed" as const;
+    return { msg: "confirmed" as const, email: toDecisionRow(inquiry) };
   });
 
+  // Email after the transaction committed; never blocks the action.
+  if (outcome.email) {
+    try {
+      await sendReservationDecisionEmail({
+        inquiry: outcome.email,
+        decision: "CONFIRMED",
+      });
+    } catch (err) {
+      console.error("[admin] confirm email failed:", err);
+    }
+  }
+
   revalidatePath("/admin");
-  backTo({ status, msg: result });
+  backTo({ status, range, msg: outcome.msg });
 }
 
+/** → CANCELLED. Sends the client a "not confirmed" email when the status
+ *  actually changed (no duplicate emails on re-click). */
 export async function cancelInquiry(formData: FormData) {
   await requireAdmin();
+  const { status, range } = filtersFrom(formData);
   const id = String(formData.get("id") ?? "");
-  const status = String(formData.get("statusFilter") ?? "pending");
-  if (!id) backTo({ status, msg: "error" });
+  if (!id) backTo({ status, range, msg: "error" });
 
-  await prisma.inquiry.updateMany({
+  const inquiry = await prisma.inquiry.findUnique({
     where: { id },
-    data: { status: "CANCELLED" },
+    include: { car: { select: { title: true } } },
   });
+  if (!inquiry) backTo({ status, range, msg: "error" });
+
+  const changed = inquiry!.status !== "CANCELLED";
+  if (changed) {
+    await prisma.inquiry.update({
+      where: { id },
+      data: { status: "CANCELLED" },
+    });
+    try {
+      await sendReservationDecisionEmail({
+        inquiry: toDecisionRow(inquiry!),
+        decision: "CANCELLED",
+      });
+    } catch (err) {
+      console.error("[admin] cancel email failed:", err);
+    }
+  }
 
   revalidatePath("/admin");
-  backTo({ status, msg: "cancelled" });
+  backTo({ status, range, msg: "cancelled" });
 }
 
 /** Manual unavailability window (service etc.). Day-granularity, inclusive:

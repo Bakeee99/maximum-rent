@@ -91,3 +91,133 @@ export async function sendInquiryEmail(
     return { sent: false, error: "send_failed" };
   }
 }
+
+// ---------------------------------------------------------------------------
+// Reservation decision email → CLIENT (sent when the agency confirms/cancels)
+// ---------------------------------------------------------------------------
+
+type DecisionInquiry = {
+  reference: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  pickupAt: Date;
+  returnAt: Date;
+  locale: "HR" | "EN";
+  carTitle: string | null;
+};
+
+const TZ = "Europe/Sarajevo";
+function fmtTz(d: Date, locale: "HR" | "EN"): string {
+  return new Intl.DateTimeFormat(locale === "EN" ? "en-GB" : "hr-HR", {
+    timeZone: TZ,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
+
+const DECISION_COPY = {
+  HR: {
+    confirmedSubject: (ref: string) => `Rezervacija potvrđena ✔ (${ref})`,
+    cancelledSubject: (ref: string) => `Rezervacija nije potvrđena (${ref})`,
+    confirmedTitle: "Vaša rezervacija je potvrđena!",
+    cancelledTitle: "Vaša rezervacija nažalost nije potvrđena",
+    confirmedIntro: (name: string) =>
+      `Poštovani/a ${name}, s zadovoljstvom potvrđujemo vašu rezervaciju. Detalji su ispod — vidimo se!`,
+    cancelledIntro: (name: string) =>
+      `Poštovani/a ${name}, nažalost nismo u mogućnosti potvrditi vašu rezervaciju za traženi period. Slobodno nas kontaktirajte — rado ćemo pronaći alternativni termin ili vozilo.`,
+    car: "Vozilo",
+    period: "Period",
+    reference: "Referenca",
+    contact: "Kontakt",
+    footer: "Maximum Rent a Car · Hercegovina",
+  },
+  EN: {
+    confirmedSubject: (ref: string) => `Reservation confirmed ✔ (${ref})`,
+    cancelledSubject: (ref: string) => `Reservation not confirmed (${ref})`,
+    confirmedTitle: "Your reservation is confirmed!",
+    cancelledTitle: "Unfortunately, your reservation was not confirmed",
+    confirmedIntro: (name: string) =>
+      `Dear ${name}, we're happy to confirm your reservation. Details below — see you soon!`,
+    cancelledIntro: (name: string) =>
+      `Dear ${name}, unfortunately we are unable to confirm your reservation for the requested period. Feel free to contact us — we'll gladly find an alternative date or vehicle.`,
+    car: "Vehicle",
+    period: "Period",
+    reference: "Reference",
+    contact: "Contact",
+    footer: "Maximum Rent a Car · Herzegovina",
+  },
+} as const;
+
+/**
+ * Notifies the client that the agency confirmed or cancelled their
+ * reservation. Never throws — returns { sent:false } on any failure so the
+ * admin action (status change) always succeeds regardless of email state.
+ */
+export async function sendReservationDecisionEmail({
+  inquiry,
+  decision,
+}: {
+  inquiry: DecisionInquiry;
+  decision: "CONFIRMED" | "CANCELLED";
+}): Promise<{ sent: boolean; error?: string }> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from =
+    process.env.INQUIRY_FROM_EMAIL ?? "Maximum Rent <onboarding@resend.dev>";
+
+  if (!apiKey) {
+    console.warn("[email] RESEND_API_KEY missing — decision email skipped.");
+    return { sent: false, error: "missing_api_key" };
+  }
+
+  const c = DECISION_COPY[inquiry.locale] ?? DECISION_COPY.HR;
+  const confirmed = decision === "CONFIRMED";
+  const name = `${inquiry.firstName} ${inquiry.lastName}`;
+  const accent = confirmed ? "#16a34a" : "#E30613";
+
+  const html = `
+  <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;background:#fff">
+    <div style="background:#E30613;padding:20px 24px;border-radius:12px 12px 0 0">
+      <h1 style="margin:0;color:#fff;font-size:18px;letter-spacing:.02em">Maximum Rent a Car</h1>
+      <p style="margin:4px 0 0;color:#ffd7d9;font-size:13px">${c.reference}: ${inquiry.reference}</p>
+    </div>
+    <div style="border:1px solid #eee;border-top:0;border-radius:0 0 12px 12px;padding:24px">
+      <h2 style="margin:0 0 8px;color:${accent};font-size:17px">
+        ${confirmed ? c.confirmedTitle : c.cancelledTitle}
+      </h2>
+      <p style="margin:0 0 16px;color:#444;font-size:14px;line-height:1.6">
+        ${confirmed ? c.confirmedIntro(name) : c.cancelledIntro(name)}
+      </p>
+      <table style="width:100%;border-collapse:collapse">
+        ${row(c.car, inquiry.carTitle)}
+        ${row(c.period, `${fmtTz(inquiry.pickupAt, inquiry.locale)} → ${fmtTz(inquiry.returnAt, inquiry.locale)}`)}
+        <tr><td colspan="2" style="border-top:1px solid #eee;padding-top:8px"></td></tr>
+        ${row(c.contact, `${"info@maximum-rent.com"} · +387 63 660 444 · WhatsApp +387 63 660 444`)}
+      </table>
+      <p style="margin:20px 0 0;color:#999;font-size:12px">${c.footer}</p>
+    </div>
+  </div>`;
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from,
+      to: inquiry.email,
+      subject: confirmed
+        ? c.confirmedSubject(inquiry.reference)
+        : c.cancelledSubject(inquiry.reference),
+      html,
+    });
+    if (error) {
+      console.error("[email] decision send error:", error);
+      return { sent: false, error: String(error) };
+    }
+    return { sent: true };
+  } catch (err) {
+    console.error("[email] decision send failed:", err);
+    return { sent: false, error: "send_failed" };
+  }
+}

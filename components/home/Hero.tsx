@@ -54,7 +54,7 @@ function OpenStatus({
   if (!state) return null;
 
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur">
+    <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/50 px-3.5 py-2 shadow-lg shadow-black/30 backdrop-blur-md">
       <span
         className={`h-2 w-2 rounded-full ${
           state.open ? "bg-emerald-400 animate-pulse" : "bg-red-400"
@@ -63,7 +63,7 @@ function OpenStatus({
       <span className="font-medium text-white">
         {state.open ? openLabel : closedLabel}
       </span>
-      <span className="text-white/60">
+      <span className="text-white/80">
         · {state.time} {localLabel}
       </span>
     </span>
@@ -161,7 +161,7 @@ export function Hero() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${SITE.rating.score} / 5 — ${SITE.rating.count} ${t("reviews")}`}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur transition-colors hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/50 px-3.5 py-2 shadow-lg shadow-black/30 backdrop-blur-md transition-colors hover:bg-black/60"
           >
             <span className="flex items-center gap-0.5 text-amber-400">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -171,7 +171,7 @@ export function Hero() {
             <span className="font-semibold text-white">
               {SITE.rating.score.toLocaleString(locale)}
             </span>
-            <span className="text-white/70">
+            <span className="text-white/85">
               · {SITE.rating.count} {t("reviews")}
             </span>
           </a>

@@ -1,5 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ArrowRight } from "lucide-react";
 
+import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 import { toCarListItem } from "@/lib/types";
 import { Hero } from "@/components/home/Hero";
@@ -68,7 +70,17 @@ export default async function HomePage({
               {t("subtitle")}
             </h2>
           </div>
-          <FleetGrid cars={cars} />
+          <FleetGrid cars={cars} showFilters={false} />
+
+          <div className="mt-10 flex justify-center">
+            <Link
+              href="/vozila"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-sm font-semibold text-brand-foreground shadow-brand transition-colors hover:bg-brand-700"
+            >
+              {t("viewAll")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </section>
       )}
 

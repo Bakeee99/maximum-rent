@@ -3,7 +3,9 @@ import {
   CalendarDays,
   Car as CarIcon,
   Check,
+  Clock,
   Mail,
+  MessageCircle,
   Phone,
   Plane,
   Plus,
@@ -12,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { buildOwnerSummaryUrl } from "@/lib/whatsapp";
 import { confirmInquiry, cancelInquiry, addBlock, removeBlock } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -47,6 +50,14 @@ const FILTERS = [
 ] as const;
 type Filter = (typeof FILTERS)[number]["id"];
 
+const RANGES = [
+  { id: "24h", label: "Zadnjih 24h", ms: 24 * 60 * 60 * 1000 },
+  { id: "7d", label: "Zadnjih 7 dana", ms: 7 * 24 * 60 * 60 * 1000 },
+  { id: "30d", label: "Zadnjih 30 dana", ms: 30 * 24 * 60 * 60 * 1000 },
+  { id: "all", label: "Sve", ms: null },
+] as const;
+type Range = (typeof RANGES)[number]["id"];
+
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
   NEW: { label: "Novo", cls: "bg-amber-500/15 text-amber-600 dark:text-amber-400" },
   CONTACTED: { label: "Kontaktirano", cls: "bg-sky-500/15 text-sky-600 dark:text-sky-400" },
@@ -76,9 +87,18 @@ export default async function AdminPage({
   const filter: Filter = (FILTERS.some((f) => f.id === filterRaw)
     ? filterRaw
     : "pending") as Filter;
+  const rangeRaw = one(searchParams.range) ?? "all";
+  const range: Range = (RANGES.some((r) => r.id === rangeRaw)
+    ? rangeRaw
+    : "all") as Range;
   const msg = MESSAGES[one(searchParams.msg) ?? ""];
 
-  const where =
+  const rangeMs = RANGES.find((r) => r.id === range)?.ms ?? null;
+  const createdAtWhere = rangeMs
+    ? { createdAt: { gte: new Date(Date.now() - rangeMs) } }
+    : {};
+
+  const statusWhere =
     filter === "pending"
       ? { status: { in: ["NEW", "CONTACTED"] } as { in: ("NEW" | "CONTACTED")[] } }
       : filter === "confirmed"
@@ -86,6 +106,8 @@ export default async function AdminPage({
         : filter === "cancelled"
           ? { status: { in: ["CANCELLED", "COMPLETED"] } as { in: ("CANCELLED" | "COMPLETED")[] } }
           : {};
+
+  const where = { ...statusWhere, ...createdAtWhere };
 
   const [inquiries, blocks, cars, counts] = await Promise.all([
     prisma.inquiry.findMany({
@@ -103,7 +125,7 @@ export default async function AdminPage({
       orderBy: { sortOrder: "asc" },
       select: { id: true, title: true },
     }),
-    prisma.inquiry.groupBy({ by: ["status"], _count: true }),
+    prisma.inquiry.groupBy({ by: ["status"], _count: true, where: createdAtWhere }),
   ]);
 
   const countByStatus = new Map(counts.map((c) => [c.status, c._count]));
@@ -152,7 +174,7 @@ export default async function AdminPage({
           return (
             <Link
               key={f.id}
-              href={`/admin?status=${f.id}`}
+              href={`/admin?status=${f.id}&range=${range}`}
               className={`inline-flex flex-none items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                 active
                   ? "border-brand bg-brand text-brand-foreground"
@@ -169,6 +191,27 @@ export default async function AdminPage({
               >
                 {filterCount[f.id]}
               </span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Time-range filter */}
+      <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Clock className="h-4 w-4 flex-none text-muted-foreground" />
+        {RANGES.map((r) => {
+          const active = r.id === range;
+          return (
+            <Link
+              key={r.id}
+              href={`/admin?status=${filter}&range=${r.id}`}
+              className={`inline-flex flex-none items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                active
+                  ? "border-brand bg-brand text-brand-foreground"
+                  : "border-border bg-surface text-foreground/80 hover:border-brand hover:text-brand"
+              }`}
+            >
+              {r.label}
             </Link>
           );
         })}
@@ -213,10 +256,29 @@ export default async function AdminPage({
                 </div>
 
                 {canAct && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={buildOwnerSummaryUrl({
+                        reference: q.reference,
+                        createdAt: q.createdAt,
+                        firstName: q.firstName,
+                        lastName: q.lastName,
+                        phone: q.phone,
+                        carTitle: q.car?.title ?? q.carTitleSnapshot,
+                        pickupAt: q.pickupAt,
+                        returnAt: q.returnAt,
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-[#25D366] px-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      WhatsApp
+                    </a>
                     <form action={confirmInquiry}>
                       <input type="hidden" name="id" value={q.id} />
                       <input type="hidden" name="statusFilter" value={filter} />
+                      <input type="hidden" name="rangeFilter" value={range} />
                       <button
                         type="submit"
                         className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-emerald-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
@@ -228,6 +290,7 @@ export default async function AdminPage({
                     <form action={cancelInquiry}>
                       <input type="hidden" name="id" value={q.id} />
                       <input type="hidden" name="statusFilter" value={filter} />
+                      <input type="hidden" name="rangeFilter" value={range} />
                       <button
                         type="submit"
                         className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-sm font-medium text-foreground/80 transition-colors hover:border-brand hover:text-brand"
@@ -242,6 +305,7 @@ export default async function AdminPage({
                   <form action={cancelInquiry}>
                     <input type="hidden" name="id" value={q.id} />
                     <input type="hidden" name="statusFilter" value={filter} />
+                    <input type="hidden" name="rangeFilter" value={range} />
                     <button
                       type="submit"
                       className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-sm font-medium text-foreground/80 transition-colors hover:border-brand hover:text-brand"

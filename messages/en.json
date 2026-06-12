@@ -67,7 +67,8 @@
       "MINIBUS": "Minibus"
     },
     "swipeHint": "Swipe for more",
-    "invalidPeriod": "The selected period isn't valid — the return date must be after pick-up. Showing all vehicles."
+    "invalidPeriod": "The selected period isn't valid — the return date must be after pick-up. Showing all vehicles.",
+    "viewAll": "View all vehicles"
   },
   "Inquiry": {
     "title": "Reservation inquiry",
@@ -83,7 +84,7 @@
     "or": "or",
     "sending": "Sending...",
     "success": "Inquiry received!",
-    "successBody": "Thank you. Our team will get back to you shortly with availability confirmation.",
+    "successBody": "Thank you! Your inquiry has been received. You'll get the reservation confirmation by email — please keep an eye on your inbox (check spam/junk too).",
     "errRequired": "Required field",
     "errEmail": "Enter a valid email",
     "errPhone": "Enter a valid phone number",
