@@ -1,49 +1,48 @@
 /**
- * Automatic WhatsApp notification to the owner via CallMeBot
- * (https://www.callmebot.com) — a free service for personal WhatsApp
- * notifications. Unlike wa.me links (which only prefill a chat), this
- * actually DELIVERS the message server-side, with no paid WhatsApp
- * Business API.
+ * Automatic owner notification via Telegram Bot API (free, official,
+ * reliable). Sends a short message to the owner's Telegram when a new
+ * inquiry arrives. Replaces the earlier CallMeBot/WhatsApp attempt.
  *
- * Setup (one-time, on the receiving phone):
- *  1. Add CallMeBot's activation number to contacts (see callmebot.com →
- *     "WhatsApp Text Messages" for the current number).
- *  2. From WhatsApp, send it: "I allow callmebot to send me messages".
- *  3. The bot replies with a personal API key.
- *  4. Set env: CALLMEBOT_PHONE (E.164, e.g. 38762784029) and CALLMEBOT_APIKEY.
+ * Setup (one-time, ~2 min):
+ *  1. In Telegram, open @BotFather → /newbot → pick a name → you get a
+ *     BOT TOKEN (looks like 123456789:AA...).
+ *  2. Open your new bot's chat and press START (send /start).
+ *  3. Visit https://api.telegram.org/bot<TOKEN>/getUpdates in a browser —
+ *     read "chat":{"id": <number>} from the JSON. That number is the CHAT ID.
+ *  4. Set env: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.
  *
- * If the env vars are missing, sending is skipped silently (logged) — the
+ * If env vars are missing, sending is skipped silently (logged) — the
  * inquiry flow never depends on this.
  */
-export async function sendOwnerWhatsApp(
+export async function sendOwnerNotification(
   text: string,
 ): Promise<{ sent: boolean; error?: string }> {
-  const phone = process.env.CALLMEBOT_PHONE;
-  const apikey = process.env.CALLMEBOT_APIKEY;
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  if (!phone || !apikey) {
+  if (!token || !chatId) {
     console.warn(
-      "[whatsapp] CALLMEBOT_PHONE/CALLMEBOT_APIKEY missing — auto notification skipped.",
+      "[notify] TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID missing — owner notification skipped.",
     );
     return { sent: false, error: "not_configured" };
   }
 
   try {
-    const url =
-      `https://api.callmebot.com/whatsapp.php` +
-      `?phone=${encodeURIComponent(phone)}` +
-      `&apikey=${encodeURIComponent(apikey)}` +
-      `&text=${encodeURIComponent(text)}`;
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text }),
+      cache: "no-store",
+    });
 
-    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      console.error("[whatsapp] CallMeBot error:", res.status, body.slice(0, 200));
+      console.error("[notify] Telegram error:", res.status, body.slice(0, 200));
       return { sent: false, error: `http_${res.status}` };
     }
     return { sent: true };
   } catch (err) {
-    console.error("[whatsapp] CallMeBot send failed:", err);
+    console.error("[notify] Telegram send failed:", err);
     return { sent: false, error: "send_failed" };
   }
 }

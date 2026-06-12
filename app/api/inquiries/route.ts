@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { inquirySchema } from "@/lib/validations";
 import { sendInquiryEmail } from "@/lib/email";
 import { buildOwnerSummaryText } from "@/lib/whatsapp";
-import { sendOwnerWhatsApp } from "@/lib/notify";
+import { sendOwnerNotification } from "@/lib/notify";
 
 export const runtime = "nodejs";
 
@@ -62,9 +62,9 @@ export async function POST(req: Request) {
       returnLocationName: ret?.name ?? null,
     });
 
-    // Automatic WhatsApp summary to the owner (CallMeBot). Non-fatal —
-    // the inquiry is already stored either way.
-    await sendOwnerWhatsApp(
+    // Automatic Telegram summary to the owner. Non-fatal — the inquiry
+    // is already stored either way.
+    await sendOwnerNotification(
       buildOwnerSummaryText({
         reference: inquiry.reference,
         createdAt: inquiry.createdAt,
