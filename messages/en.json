@@ -92,7 +92,11 @@
     "summaryPeriod": "Period",
     "summaryPickup": "Pick-up",
     "summaryReturn": "Return",
-    "close": "Close"
+    "close": "Close",
+    "pickupLocation": "Pick-up location",
+    "returnLocation": "Return location",
+    "selectLocation": "Select a location…",
+    "sameAsPickup": "Same as pick-up"
   },
   "Footer": {
     "contact": "Contact",

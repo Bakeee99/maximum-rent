@@ -21,7 +21,7 @@ function dateOffset(days = 0): string {
 const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => `${pad(Math.floor(i / 2))}:${i % 2 ? "30" : "00"}`);
 
 const CONTROL =
-  "h-12 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30";
+  "h-12 w-full min-w-0 rounded-xl border border-border bg-background px-3.5 text-base text-foreground outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30 sm:text-sm";
 const DATE_CONTROL = `${CONTROL} flex-1 [color-scheme:light] dark:[color-scheme:dark]`;
 const LBL =
   "mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground";

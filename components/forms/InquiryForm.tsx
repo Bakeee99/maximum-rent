@@ -93,7 +93,7 @@ export function InquiryForm({ type = "contact" }: { type?: FormType }) {
   }
 
   const inputCls =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/30";
+    "w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/30 sm:text-sm";
   const labelCls = "mb-1.5 block text-sm font-medium text-foreground";
   const req = <span className="text-brand">*</span>;
 

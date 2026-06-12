@@ -103,7 +103,11 @@ export default async function VehiclesPage({
       </div>
 
       {items.length > 0 ? (
-        <FleetGrid cars={items} search={search} />
+        <FleetGrid
+          cars={items}
+          search={search}
+          locations={locations.map((l) => ({ id: l.id, name: l.name }))}
+        />
       ) : (
         <p className="rounded-2xl border border-border bg-surface p-8 text-center text-muted-foreground">
           {t("noResults")}

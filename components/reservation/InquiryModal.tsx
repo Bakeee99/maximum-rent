@@ -11,6 +11,7 @@ import { buildWhatsAppUrl, type InquiryContext } from "@/lib/whatsapp";
 type Props = {
   car: CarListItem | null;
   search?: SearchContext;
+  locations?: { id: string; name: string }[];
   onClose: () => void;
 };
 
@@ -37,7 +38,7 @@ function snapTime(t: string) {
   return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;
 }
 
-export function InquiryModal({ car, search, onClose }: Props) {
+export function InquiryModal({ car, search, locations = [], onClose }: Props) {
   const locale = useLocale() as AppLocale;
   const t = useTranslations("Inquiry");
 
@@ -48,6 +49,8 @@ export function InquiryModal({ car, search, onClose }: Props) {
   const [pickupTime, setPickupTime] = useState(snapTime(initPickup.time));
   const [returnDate, setReturnDate] = useState(initReturn.date);
   const [returnTime, setReturnTime] = useState(snapTime(initReturn.time));
+  const [pickupLoc, setPickupLoc] = useState(search?.pickupLocationId ?? "");
+  const [returnLoc, setReturnLoc] = useState(search?.returnLocationId ?? "");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -67,8 +70,10 @@ export function InquiryModal({ car, search, onClose }: Props) {
       setPickupTime(initPickup.time);
       setReturnDate(initReturn.date);
       setReturnTime(initReturn.time);
+      setPickupLoc(search?.pickupLocationId ?? "");
+      setReturnLoc(search?.returnLocationId ?? "");
     }
-  }, [car, initPickup, initReturn]);
+  }, [car, initPickup, initReturn, search?.pickupLocationId, search?.returnLocationId]);
 
   // Lock body scroll while open + close on Escape
   useEffect(() => {
@@ -87,10 +92,19 @@ export function InquiryModal({ car, search, onClose }: Props) {
   const pickupISO = new Date(`${pickupDate}T${pickupTime}`).toISOString();
   const returnISO = new Date(`${returnDate}T${returnTime}`).toISOString();
 
+  // Effective locations: explicit choice in the modal, else search context.
+  const effPickupId = pickupLoc || search?.pickupLocationId || "";
+  const effReturnId = returnLoc || effPickupId;
+  const locName = (id: string) => locations.find((l) => l.id === id)?.name;
+
   const inquiryCtx: InquiryContext = {
     car: { title: car.title },
-    pickupLocation: search?.pickupLocation,
-    returnLocation: search?.returnLocation,
+    pickupLocation: effPickupId
+      ? { name: locName(effPickupId) ?? search?.pickupLocation?.name ?? "" }
+      : search?.pickupLocation,
+    returnLocation: effReturnId
+      ? { name: locName(effReturnId) ?? search?.returnLocation?.name ?? "" }
+      : search?.returnLocation,
     pickupAt: pickupISO,
     returnAt: returnISO,
     locale,
@@ -107,8 +121,8 @@ export function InquiryModal({ car, search, onClose }: Props) {
         body: JSON.stringify({
           carId: car!.id,
           carTitle: car!.title,
-          pickupLocationId: search?.pickupLocationId,
-          returnLocationId: search?.returnLocationId,
+          pickupLocationId: effPickupId || undefined,
+          returnLocationId: effReturnId || undefined,
           pickupAt: pickupISO,
           returnAt: returnISO,
           firstName,
@@ -128,8 +142,10 @@ export function InquiryModal({ car, search, onClose }: Props) {
     }
   }
 
+  // text-base (16px) on mobile prevents iOS Safari from auto-zooming into
+  // focused fields; sm:text-sm restores the compact look on larger screens.
   const input =
-    "h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30";
+    "h-11 w-full min-w-0 rounded-xl border border-border bg-background px-3 text-base outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30 sm:text-sm";
   const lbl = "mb-1 block text-xs font-medium text-muted-foreground";
 
   return (
@@ -190,17 +206,62 @@ export function InquiryModal({ car, search, onClose }: Props) {
                 }}
                 className="mt-5 space-y-4"
               >
+                {/* Locations */}
+                {locations.length > 0 && (
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className={lbl}>{t("pickupLocation")}</label>
+                      <div className="relative">
+                        <select
+                          value={pickupLoc}
+                          onChange={(e) => setPickupLoc(e.target.value)}
+                          className={`${input} appearance-none pr-8 ${pickupLoc ? "" : "text-muted-foreground"}`}
+                          required
+                        >
+                          <option value="" disabled>
+                            {t("selectLocation")}
+                          </option>
+                          {locations.map((l) => (
+                            <option key={l.id} value={l.id}>
+                              {l.name}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={lbl}>{t("returnLocation")}</label>
+                      <div className="relative">
+                        <select
+                          value={returnLoc}
+                          onChange={(e) => setReturnLoc(e.target.value)}
+                          className={`${input} appearance-none pr-8`}
+                        >
+                          <option value="">{t("sameAsPickup")}</option>
+                          {locations.map((l) => (
+                            <option key={l.id} value={l.id}>
+                              {l.name}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Dates */}
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className={lbl}>{t("summaryPickup")}</label>
-                    <div className="grid grid-cols-[minmax(0,1fr)_7rem] gap-2">
+                    <div className="grid grid-cols-[minmax(0,1fr)_6.75rem] gap-2">
                       <input
                         type="date"
                         value={pickupDate}
                         min={splitISO(undefined, 0).date}
                         onChange={(e) => setPickupDate(e.target.value)}
-                        className={`${input} w-full`}
+                        className={`${input} appearance-none text-left [&::-webkit-date-and-time-value]:text-left`}
                         required
                       />
                       <div className="relative">
@@ -222,13 +283,13 @@ export function InquiryModal({ car, search, onClose }: Props) {
                   </div>
                   <div>
                     <label className={lbl}>{t("summaryReturn")}</label>
-                    <div className="grid grid-cols-[minmax(0,1fr)_7rem] gap-2">
+                    <div className="grid grid-cols-[minmax(0,1fr)_6.75rem] gap-2">
                       <input
                         type="date"
                         value={returnDate}
                         min={pickupDate}
                         onChange={(e) => setReturnDate(e.target.value)}
-                        className={`${input} w-full`}
+                        className={`${input} appearance-none text-left [&::-webkit-date-and-time-value]:text-left`}
                         required
                       />
                       <div className="relative">

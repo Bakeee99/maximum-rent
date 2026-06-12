@@ -70,7 +70,11 @@ export default async function HomePage({
               {t("subtitle")}
             </h2>
           </div>
-          <FleetGrid cars={cars} showFilters={false} />
+          <FleetGrid
+            cars={cars}
+            showFilters={false}
+            locations={locations.map((l) => ({ id: l.id, name: l.name }))}
+          />
 
           <div className="mt-10 flex justify-center">
             <Link

@@ -92,7 +92,11 @@
     "summaryPeriod": "Period",
     "summaryPickup": "Preuzimanje",
     "summaryReturn": "Povratak",
-    "close": "Zatvori"
+    "close": "Zatvori",
+    "pickupLocation": "Lokacija preuzimanja",
+    "returnLocation": "Lokacija povrata",
+    "selectLocation": "Odaberite lokaciju…",
+    "sameAsPickup": "Isto kao preuzimanje"
   },
   "Footer": {
     "contact": "Kontakt",

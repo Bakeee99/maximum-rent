@@ -15,6 +15,8 @@ import type { CarListItem, SearchContext } from "@/lib/types";
 type Props = {
   cars: CarListItem[];
   search?: SearchContext;
+  /** Pickup/return offices offered in the inquiry modal. */
+  locations?: { id: string; name: string }[];
   /** Hide the type-filter bar (e.g. on the homepage featured section). */
   showFilters?: boolean;
 };
@@ -24,7 +26,7 @@ type Props = {
  * active type filter. Filtering is done client-side because the fleet is small
  * — instant, no extra requests. Cars can match several categories at once.
  */
-export function FleetGrid({ cars, search, showFilters = true }: Props) {
+export function FleetGrid({ cars, search, locations, showFilters = true }: Props) {
   const t = useTranslations("Fleet");
   const [selected, setSelected] = useState<CarListItem | null>(null);
   const [active, setActive] = useState<CarCategory | "ALL">("ALL");
@@ -95,6 +97,7 @@ export function FleetGrid({ cars, search, showFilters = true }: Props) {
       <InquiryModal
         car={selected}
         search={search}
+        locations={locations}
         onClose={() => setSelected(null)}
       />
     </>
