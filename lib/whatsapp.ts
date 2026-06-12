@@ -92,24 +92,24 @@ function fmtSarajevo(d: Date): string {
   }).format(d);
 }
 
+/** Short owner-facing summary of a new inquiry (plain text, HR). */
+export function buildOwnerSummaryText(q: OwnerSummary): string {
+  return (
+    `🚗 Novi upit (${q.reference.slice(-8)})\n` +
+    `Poslano: ${fmtSarajevo(q.createdAt)}\n` +
+    `Klijent: ${q.firstName} ${q.lastName} · ${q.phone}\n` +
+    `Vozilo: ${q.carTitle ?? "—"}\n` +
+    `Period: ${fmtSarajevo(q.pickupAt)} → ${fmtSarajevo(q.returnAt)}`
+  );
+}
+
 /**
  * wa.me link to the owner's number with a short, prefilled summary of a new
- * inquiry — one tap in /admin forwards the details to WhatsApp. (Server-side
- * auto-sending would require the paid WhatsApp Business API; this is the
- * simplest free alternative.)
- *
- * OWNER_WHATSAPP env (optional, server-side) overrides the target number —
- * useful while testing so summaries go to the developer instead of the owner.
+ * inquiry. OWNER_WHATSAPP env (optional, server-side) overrides the target.
  */
 export function buildOwnerSummaryUrl(
   q: OwnerSummary,
   phone: string = process.env.OWNER_WHATSAPP ?? WHATSAPP_NUMBER,
 ): string {
-  const msg =
-    `🚗 Novi upit (${q.reference.slice(-8)})\n` +
-    `Poslano: ${fmtSarajevo(q.createdAt)}\n` +
-    `Klijent: ${q.firstName} ${q.lastName} · ${q.phone}\n` +
-    `Vozilo: ${q.carTitle ?? "—"}\n` +
-    `Period: ${fmtSarajevo(q.pickupAt)} → ${fmtSarajevo(q.returnAt)}`;
-  return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  return `https://wa.me/${phone}?text=${encodeURIComponent(buildOwnerSummaryText(q))}`;
 }

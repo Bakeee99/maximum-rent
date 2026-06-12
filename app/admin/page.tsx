@@ -5,7 +5,6 @@ import {
   Check,
   Clock,
   Mail,
-  MessageCircle,
   Phone,
   Plane,
   Plus,
@@ -14,7 +13,6 @@ import {
   X,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { buildOwnerSummaryUrl } from "@/lib/whatsapp";
 import { confirmInquiry, cancelInquiry, addBlock, removeBlock } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -257,24 +255,6 @@ export default async function AdminPage({
 
                 {canAct && (
                   <div className="flex flex-wrap gap-2">
-                    <a
-                      href={buildOwnerSummaryUrl({
-                        reference: q.reference,
-                        createdAt: q.createdAt,
-                        firstName: q.firstName,
-                        lastName: q.lastName,
-                        phone: q.phone,
-                        carTitle: q.car?.title ?? q.carTitleSnapshot,
-                        pickupAt: q.pickupAt,
-                        returnAt: q.returnAt,
-                      })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-[#25D366] px-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                      WhatsApp
-                    </a>
                     <form action={confirmInquiry}>
                       <input type="hidden" name="id" value={q.id} />
                       <input type="hidden" name="statusFilter" value={filter} />
