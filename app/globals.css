@@ -55,9 +55,16 @@
   html.theme-transition *,
   html.theme-transition *::before,
   html.theme-transition *::after {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* !important so this overrides per-element Tailwind `transition-colors`
+       (which lives in the higher-priority `utilities` layer). Without it,
+       cards/buttons cross-fade at their own 150ms while the rest of the page
+       uses 300ms — producing a staggered, glitchy switch where cards change
+       first and the background follows. Forcing one duration makes the whole
+       page change together. */
+    transition-property: background-color, border-color, color, fill, stroke !important;
+    transition-duration: 300ms !important;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition-delay: 0s !important;
   }
 
   .dark input[type="date"],
