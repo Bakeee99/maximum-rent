@@ -216,7 +216,10 @@
     "loading": "Učitavanje...",
     "backHome": "Povratak na početnu",
     "notFound": "Stranica nije pronađena",
-    "backToTop": "Nazad na vrh"
+    "backToTop": "Nazad na vrh",
+    "prevImage": "Prethodna slika",
+    "nextImage": "Sljedeća slika",
+    "closeGallery": "Zatvori galeriju"
   },
   "WhyChoose": {
     "eyebrow": "Zašto Maximum",

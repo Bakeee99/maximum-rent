@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Car as CarIcon, ChevronRight, Cog, Fuel, Users } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -13,6 +13,8 @@ import {
 } from "@/lib/car-labels";
 import { buildWhatsAppUrl, type InquiryContext } from "@/lib/whatsapp";
 import type { CarListItem, SearchContext } from "@/lib/types";
+import { CarGallery } from "./CarGallery";
+import { ImageLightbox } from "./ImageLightbox";
 
 type Props = {
   car: CarListItem;
@@ -25,6 +27,8 @@ export function CarCard({ car, search, onSelect, index = 0 }: Props) {
   const locale = useLocale() as AppLocale;
   const t = useTranslations("Fleet");
   const common = useTranslations("Common");
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const images = car.images ?? [];
 
   const inquiry: InquiryContext = {
     car: { title: car.title },
@@ -66,21 +70,14 @@ export function CarCard({ car, search, onSelect, index = 0 }: Props) {
         {label(CLASS_LABELS[car.carClass], locale)}
       </span>
 
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-muted">
-        {car.images?.[0] ? (
-          <Image
-            src={car.images[0]}
-            alt={car.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-contain p-6 transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-muted-foreground">
-            <CarIcon className="h-12 w-12" />
-          </div>
-        )}
-      </div>
+      <CarGallery images={images} title={car.title} onOpen={setLightbox} />
+
+      <ImageLightbox
+        images={images}
+        title={car.title}
+        openIndex={lightbox}
+        onClose={() => setLightbox(null)}
+      />
 
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div>

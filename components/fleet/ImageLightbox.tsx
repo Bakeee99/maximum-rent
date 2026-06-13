@@ -1,0 +1,143 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+type Props = {
+  images: string[];
+  title: string;
+  /** Index to open at, or null when closed. */
+  openIndex: number | null;
+  onClose: () => void;
+};
+
+/**
+ * Fullscreen photo viewer. Rendered through a portal (the card uses Framer
+ * transforms, which would otherwise trap `position: fixed`). Esc closes,
+ * arrow keys + swipe navigate.
+ */
+export function ImageLightbox({ images, title, openIndex, onClose }: Props) {
+  const t = useTranslations("Common");
+  const [index, setIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const touchX = useRef<number | null>(null);
+
+  const open = openIndex !== null && images.length > 0;
+  const count = images.length;
+
+  useEffect(() => setMounted(true), []);
+
+  // Sync to the requested start index whenever the lightbox opens.
+  useEffect(() => {
+    if (openIndex !== null) setIndex(Math.min(openIndex, count - 1));
+  }, [openIndex, count]);
+
+  // Keyboard + scroll lock while open.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % count);
+      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + count) % count);
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, count, onClose]);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          key="lightbox"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          onTouchStart={(e) => {
+            touchX.current = e.touches[0].clientX;
+          }}
+          onTouchEnd={(e) => {
+            if (touchX.current === null || count < 2) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            touchX.current = null;
+            if (Math.abs(dx) > 40)
+              setIndex((i) => (i + (dx < 0 ? 1 : -1) + count) % count);
+          }}
+        >
+          <button
+            type="button"
+            aria-label={t("closeGallery")}
+            onClick={onClose}
+            className="absolute right-4 top-4 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          {count > 1 && (
+            <span className="absolute left-1/2 top-5 z-10 -translate-x-1/2 rounded-full border border-white/15 bg-black/50 px-3 py-1 text-sm tabular-nums text-white/90">
+              {index + 1} / {count}
+            </span>
+          )}
+
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative h-[80vh] w-[94vw] sm:h-[85vh] sm:w-[88vw]"
+          >
+            <Image
+              src={images[index]}
+              alt={`${title} — ${index + 1}/${count}`}
+              fill
+              sizes="100vw"
+              priority
+              className="object-contain"
+            />
+          </motion.div>
+
+          {count > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label={t("prevImage")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIndex((i) => (i - 1 + count) % count);
+                }}
+                className="absolute left-3 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20 sm:left-5"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button
+                type="button"
+                aria-label={t("nextImage")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIndex((i) => (i + 1) % count);
+                }}
+                className="absolute right-3 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-5"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body,
+  );
+}

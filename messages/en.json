@@ -216,7 +216,10 @@
     "loading": "Loading...",
     "backHome": "Back to home",
     "notFound": "Page not found",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "prevImage": "Previous photo",
+    "nextImage": "Next photo",
+    "closeGallery": "Close gallery"
   },
   "WhyChoose": {
     "eyebrow": "Why Maximum",
