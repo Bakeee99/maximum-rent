@@ -4,19 +4,21 @@ import { prisma } from "@/lib/prisma";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DAYS_30 = 30 * 24 * 60 * 60 * 1000;
+const DAYS_14 = 14 * 24 * 60 * 60 * 1000;
 
 /**
  * Daily DB cleanup (Vercel Cron → GET with `Authorization: Bearer CRON_SECRET`,
  * which Vercel attaches automatically when the CRON_SECRET env var is set).
  *
- * Conservative deletion rule — removes only records that can no longer affect
- * availability or operations:
- *  - Inquiries older than 30 days whose status is CANCELLED or COMPLETED
- *    AND whose rental period is fully in the past (returnAt < now). Active,
- *    pending (NEW/CONTACTED) and CONFIRMED inquiries are NEVER deleted —
- *    pending ones are the agency's lead list, confirmed ones are bookings.
- *  - Manual car blocks whose window ended more than 30 days ago.
+ * Deletion rule is based on the RENTAL END (`returnAt`), not the creation date:
+ *  - An inquiry/reservation is removed only once its rental period ended more
+ *    than 14 days ago (returnAt < now − 14d). This way a long rental (e.g. a
+ *    two-month booking) is never touched while it's still running or upcoming —
+ *    it only disappears 14 days after the car was returned.
+ *  - Applies to every status: by the time returnAt is 14+ days in the past the
+ *    record can no longer affect availability (the dates are gone), whether it
+ *    was confirmed, cancelled or a stale pending lead.
+ *  - Manual car blocks are removed 14 days after their window ended.
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
@@ -26,17 +28,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
-  const now = new Date();
-  const cutoff = new Date(now.getTime() - DAYS_30);
+  const cutoff = new Date(Date.now() - DAYS_14);
 
   try {
     const [inquiries, blocks] = await Promise.all([
       prisma.inquiry.deleteMany({
-        where: {
-          createdAt: { lt: cutoff },
-          status: { in: ["CANCELLED", "COMPLETED"] },
-          returnAt: { lt: now },
-        },
+        where: { returnAt: { lt: cutoff } },
       }),
       prisma.carBlock.deleteMany({
         where: { endAt: { lt: cutoff } },
@@ -44,7 +41,7 @@ export async function GET(req: Request) {
     ]);
 
     console.log(
-      `[cron/cleanup] deleted ${inquiries.count} inquiries, ${blocks.count} blocks`,
+      `[cron/cleanup] deleted ${inquiries.count} inquiries, ${blocks.count} blocks (returnAt/endAt older than 14 days)`,
     );
     return NextResponse.json({
       ok: true,
