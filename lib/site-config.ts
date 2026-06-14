@@ -3,7 +3,6 @@ export const SITE = {
   name: "Maximum Rent a Car",
   domain: "maximum-rent.com",
   email: "info@maximum-rent.com",
-  youtubeId: "GVmQl9VyaMY",
   phones: [
     { label: "Tel", value: "+387 (0) 63 660 444", href: "tel:+38763660444" },
     { label: "Mob", value: "+387 (0) 63 660 555", href: "tel:+38763660555" },
@@ -18,8 +17,8 @@ export const SITE = {
   },
   rating: { score: 4.8, count: 108 },
   socials: {
-    facebook: "https://facebook.com",
-    instagram: "https://instagram.com",
+    facebook: "https://www.facebook.com/maximumrentacarmedugorije",
+    instagram: "https://www.instagram.com/rentacarmaximum/",
   },
 } as const;
 

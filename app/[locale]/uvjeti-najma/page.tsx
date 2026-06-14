@@ -1,4 +1,6 @@
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ChevronDown } from "lucide-react";
 import { RENTAL_TERMS, type TermsBlock } from "@/lib/rental-terms";
 
@@ -38,6 +40,20 @@ function Block({ block }: { block: TermsBlock }) {
       ))}
     </ol>
   );
+}
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tSeo = await getTranslations({ locale, namespace: "Seo" });
+  return buildPageMetadata({
+    locale,
+    path: "/uvjeti-najma",
+    title: tSeo("terms.title"),
+    description: tSeo("terms.description"),
+  });
 }
 
 export default async function TermsPage({

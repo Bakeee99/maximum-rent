@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   Wrench,
@@ -16,6 +18,20 @@ import { SITE } from "@/lib/site-config";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 
 const SERVICE_ICONS = [Wrench, ClipboardCheck, ShieldCheck, ArrowLeftRight, Disc3, Wand2];
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tSeo = await getTranslations({ locale, namespace: "Seo" });
+  return buildPageMetadata({
+    locale,
+    path: "/poslovna-ponuda",
+    title: tSeo("business.title"),
+    description: tSeo("business.description"),
+  });
+}
 
 export default async function BusinessPage({
   params: { locale },

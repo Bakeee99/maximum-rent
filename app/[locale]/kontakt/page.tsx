@@ -1,7 +1,23 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Clock, Phone, Mail, MapPin, ExternalLink } from "lucide-react";
 import { SITE, LOCATIONS } from "@/lib/site-config";
 import { InquiryForm } from "@/components/forms/InquiryForm";
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tSeo = await getTranslations({ locale, namespace: "Seo" });
+  return buildPageMetadata({
+    locale,
+    path: "/kontakt",
+    title: tSeo("contact.title"),
+    description: tSeo("contact.description"),
+  });
+}
 
 export default async function ContactPage({
   params: { locale },

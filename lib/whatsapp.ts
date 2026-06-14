@@ -102,14 +102,3 @@ export function buildOwnerSummaryText(q: OwnerSummary): string {
     `Period: ${fmtSarajevo(q.pickupAt)} → ${fmtSarajevo(q.returnAt)}`
   );
 }
-
-/**
- * wa.me link to the owner's number with a short, prefilled summary of a new
- * inquiry. OWNER_WHATSAPP env (optional, server-side) overrides the target.
- */
-export function buildOwnerSummaryUrl(
-  q: OwnerSummary,
-  phone: string = process.env.OWNER_WHATSAPP ?? WHATSAPP_NUMBER,
-): string {
-  return `https://wa.me/${phone}?text=${encodeURIComponent(buildOwnerSummaryText(q))}`;
-}

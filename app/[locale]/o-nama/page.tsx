@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   CalendarCheck,
@@ -10,6 +12,20 @@ import {
 import { Link } from "@/i18n/navigation";
 import { SITE, LOCATIONS } from "@/lib/site-config";
 import { AboutStats } from "@/components/about/AboutStats";
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tSeo = await getTranslations({ locale, namespace: "Seo" });
+  return buildPageMetadata({
+    locale,
+    path: "/o-nama",
+    title: tSeo("about.title"),
+    description: tSeo("about.description"),
+  });
+}
 
 export default async function AboutPage({
   params: { locale },

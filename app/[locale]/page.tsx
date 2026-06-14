@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight } from "lucide-react";
 
@@ -18,6 +20,20 @@ import { FleetGrid } from "@/components/fleet/FleetGrid";
 // Re-fetch featured fleet at most every 5 minutes (ISR) so new cars added in
 // Prisma Studio appear without a redeploy, while keeping the page static-fast.
 export const revalidate = 300;
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tSeo = await getTranslations({ locale, namespace: "Seo" });
+  return buildPageMetadata({
+    locale,
+    path: "/",
+    title: tSeo("home.title"),
+    description: tSeo("home.description"),
+  });
+}
 
 export default async function HomePage({
   params: { locale },

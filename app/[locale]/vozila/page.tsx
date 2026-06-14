@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AlertTriangle } from "lucide-react";
 
@@ -16,6 +18,20 @@ function one(value: string | string[] | undefined): string | undefined {
 
 function isValidISO(value?: string): value is string {
   return !!value && !Number.isNaN(Date.parse(value));
+}
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tSeo = await getTranslations({ locale, namespace: "Seo" });
+  return buildPageMetadata({
+    locale,
+    path: "/vozila",
+    title: tSeo("fleet.title"),
+    description: tSeo("fleet.description"),
+  });
 }
 
 export default async function VehiclesPage({

@@ -12,6 +12,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PageBackground } from "@/components/layout/PageBackground";
 import { BackToTop } from "@/components/layout/BackToTop";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 // latin-ext is REQUIRED for Croatian/Bosnian glyphs (č ć đ š ž).
 const inter = Inter({
@@ -30,12 +31,36 @@ export const metadata: Metadata = {
   },
   description:
     "Premium najam vozila u Hercegovini — preuzimanje na 6 lokacija, od gradskih automobila do luksuznih limuzina.",
+  applicationName: SITE.name,
+  authors: [{ name: "mehiccdev", url: "https://mehiccdev.com" }],
+  creator: "mehiccdev",
+  formatDetection: { telephone: true, address: true, email: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
   openGraph: {
     type: "website",
     siteName: SITE.name,
     title: `${SITE.name} — Rent a Car Hercegovina`,
     description:
       "Premium najam vozila u Hercegovini — preuzimanje na 6 lokacija.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: `${SITE.name} — Rent a Car Hercegovina`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE.name} — Rent a Car Hercegovina`,
+    description:
+      "Premium najam vozila u Hercegovini — preuzimanje na 6 lokacija.",
+    images: ["/og-image.jpg"],
   },
 };
 
@@ -62,6 +87,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning className={inter.variable}>
       <body className="min-h-dvh bg-background font-sans text-foreground antialiased">
+        <JsonLd locale={locale} />
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <PageBackground />

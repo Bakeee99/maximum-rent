@@ -347,5 +347,31 @@
     "sendAnother": "Send another inquiry",
     "errorText": "Something went wrong while sending. Please try again or contact us by phone.",
     "privacy": "By submitting this form you agree to be contacted regarding your inquiry."
+  },
+  "Seo": {
+    "home": {
+      "title": "Car Rental in Herzegovina — Mostar, Međugorje, Čitluk",
+      "description": "Premium car rental in Herzegovina with pickup at 6 locations — Mostar, Međugorje, Čitluk, Čapljina and Ljubuški. From city cars to luxury sedans and SUVs. Check availability and book."
+    },
+    "fleet": {
+      "title": "Our Fleet — rent a car",
+      "description": "Browse the Maximum Rent a Car fleet — sedans, SUVs, luxury and city cars. Check availability for your dates and send a reservation inquiry."
+    },
+    "about": {
+      "title": "About Us",
+      "description": "Meet Maximum Rent a Car — reliable car rental in Herzegovina since 2009, with pickup at 6 locations and a fleet for every need and budget."
+    },
+    "business": {
+      "title": "Business & Long-Term Car Rental",
+      "description": "Long-term and corporate car rental for companies — flexible terms, more cost-effective than classic leasing. Request an offer tailored to your business."
+    },
+    "terms": {
+      "title": "Rental Terms",
+      "description": "Maximum Rent a Car rental terms — booking, vehicle pickup and return, insurance and payment conditions, clearly laid out."
+    },
+    "contact": {
+      "title": "Contact & Locations",
+      "description": "Contact Maximum Rent a Car — phone, email, WhatsApp and all locations across Herzegovina (Mostar, Međugorje, Čitluk, Čapljina, Ljubuški). Open 07:30–20:30h."
+    }
   }
 }
