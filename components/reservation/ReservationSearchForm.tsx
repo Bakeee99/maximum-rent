@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, CalendarDays, Clock, ArrowRight, AlertCircle, ChevronDown } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { DateField } from "@/components/ui/DateField";
 
 type SimpleLocation = { id: string; name: string; city: string };
 
@@ -22,7 +23,7 @@ const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => `${pad(Math.floor(i / 2)
 
 const CONTROL =
   "h-12 w-full min-w-0 rounded-xl border border-border bg-background px-3.5 text-base text-foreground outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30 sm:text-sm";
-const DATE_CONTROL = `${CONTROL} flex-1 [color-scheme:light] dark:[color-scheme:dark]`;
+const DATE_CONTROL = `${CONTROL} flex-1`;
 const LBL =
   "mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground";
 
@@ -55,6 +56,7 @@ function StyledSelect({
 
 export function ReservationSearchForm({ locations }: { locations: SimpleLocation[] }) {
   const t = useTranslations("Search");
+  const locale = useLocale();
   const router = useRouter();
 
   const [sameLocation, setSameLocation] = useState(true);
@@ -158,14 +160,13 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
               {t("pickupDate")}
             </label>
             <div className="flex gap-2">
-              <input
-                id="pickup-date"
-                type="date"
-                min={today}
+              <DateField
                 value={pickupDate}
-                onChange={(e) => {
-                  setPickupDate(e.target.value);
-                  if (returnDate < e.target.value) setReturnDate(e.target.value);
+                min={today}
+                locale={locale}
+                onChange={(v) => {
+                  setPickupDate(v);
+                  if (returnDate < v) setReturnDate(v);
                 }}
                 className={DATE_CONTROL}
               />
@@ -188,12 +189,11 @@ export function ReservationSearchForm({ locations }: { locations: SimpleLocation
               {t("returnDate")}
             </label>
             <div className="flex gap-2">
-              <input
-                id="return-date"
-                type="date"
-                min={pickupDate}
+              <DateField
                 value={returnDate}
-                onChange={(e) => setReturnDate(e.target.value)}
+                min={pickupDate}
+                locale={locale}
+                onChange={setReturnDate}
                 className={DATE_CONTROL}
               />
               <div className="w-28 shrink-0">

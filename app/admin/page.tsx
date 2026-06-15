@@ -7,13 +7,14 @@ import {
   Mail,
   Phone,
   Plane,
-  Plus,
   StickyNote,
   Trash2,
   X,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { confirmInquiry, cancelInquiry, addBlock, removeBlock } from "./actions";
+import { ConfirmSubmit } from "@/components/ui/ConfirmSubmit";
+import { BlockForm } from "@/components/admin/BlockForm";
 
 export const dynamic = "force-dynamic";
 
@@ -140,8 +141,6 @@ export default async function AdminPage({
   };
 
   const today = new Date().toISOString().slice(0, 10);
-  const input =
-    "h-10 w-full min-w-0 rounded-xl border border-border bg-background px-3 text-base outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30 sm:text-sm";
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -259,25 +258,33 @@ export default async function AdminPage({
                       <input type="hidden" name="id" value={q.id} />
                       <input type="hidden" name="statusFilter" value={filter} />
                       <input type="hidden" name="rangeFilter" value={range} />
-                      <button
-                        type="submit"
+                      <ConfirmSubmit
+                        title="Potvrditi rezervaciju?"
+                        message="Vozilo će biti označeno kao zauzeto za odabrani period, a klijent će dobiti email s potvrdom."
+                        confirmLabel="Da, potvrdi"
+                        cancelLabel="Odustani"
+                        tone="confirm"
                         className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-emerald-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
                       >
                         <Check className="h-4 w-4" />
                         Potvrdi
-                      </button>
+                      </ConfirmSubmit>
                     </form>
                     <form action={cancelInquiry}>
                       <input type="hidden" name="id" value={q.id} />
                       <input type="hidden" name="statusFilter" value={filter} />
                       <input type="hidden" name="rangeFilter" value={range} />
-                      <button
-                        type="submit"
+                      <ConfirmSubmit
+                        title="Otkazati upit?"
+                        message="Klijent će dobiti email da rezervacija nije potvrđena. Ovu radnju možete kasnije ručno izmijeniti."
+                        confirmLabel="Da, otkaži"
+                        cancelLabel="Nazad"
+                        tone="danger"
                         className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-sm font-medium text-foreground/80 transition-colors hover:border-brand hover:text-brand"
                       >
                         <X className="h-4 w-4" />
                         Otkaži
-                      </button>
+                      </ConfirmSubmit>
                     </form>
                   </div>
                 )}
@@ -286,13 +293,17 @@ export default async function AdminPage({
                     <input type="hidden" name="id" value={q.id} />
                     <input type="hidden" name="statusFilter" value={filter} />
                     <input type="hidden" name="rangeFilter" value={range} />
-                    <button
-                      type="submit"
+                    <ConfirmSubmit
+                      title="Otkazati potvrđenu rezervaciju?"
+                      message="Vozilo će ponovo postati dostupno za taj period, a klijent će dobiti email o otkazivanju."
+                      confirmLabel="Da, otkaži"
+                      cancelLabel="Nazad"
+                      tone="danger"
                       className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-sm font-medium text-foreground/80 transition-colors hover:border-brand hover:text-brand"
                     >
                       <X className="h-4 w-4" />
                       Otkaži rezervaciju
-                    </button>
+                    </ConfirmSubmit>
                   </form>
                 )}
               </div>
@@ -339,69 +350,7 @@ export default async function AdminPage({
         (uključivo oba datuma).
       </p>
 
-      <form
-        action={addBlock}
-        className="mt-4 grid gap-3 rounded-2xl border border-border bg-surface p-5 shadow-card sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_2fr_auto]"
-      >
-        <div className="min-w-0">
-          <label className="mb-1 block text-xs font-medium text-muted-foreground">
-            Vozilo
-          </label>
-          <select name="carId" required className={input} defaultValue="">
-            <option value="" disabled>
-              Odaberite vozilo…
-            </option>
-            {cars.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.title}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="min-w-0">
-          <label className="mb-1 block text-xs font-medium text-muted-foreground">
-            Od datuma
-          </label>
-          <input
-            type="date"
-            name="from"
-            required
-            min={today}
-            className={`${input} appearance-none text-left [&::-webkit-date-and-time-value]:text-left`}
-          />
-        </div>
-        <div className="min-w-0">
-          <label className="mb-1 block text-xs font-medium text-muted-foreground">
-            Do datuma
-          </label>
-          <input
-            type="date"
-            name="to"
-            required
-            min={today}
-            className={`${input} appearance-none text-left [&::-webkit-date-and-time-value]:text-left`}
-          />
-        </div>
-        <div className="min-w-0">
-          <label className="mb-1 block text-xs font-medium text-muted-foreground">
-            Razlog
-          </label>
-          <input
-            type="text"
-            name="reason"
-            placeholder="Razlog (opcionalno)"
-            maxLength={200}
-            className={input}
-          />
-        </div>
-        <button
-          type="submit"
-          className="inline-flex h-10 items-center justify-center gap-1.5 self-end rounded-xl bg-brand px-4 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand-700"
-        >
-          <Plus className="h-4 w-4" />
-          Blokiraj
-        </button>
-      </form>
+      <BlockForm action={addBlock} cars={cars} today={today} />
 
       {blocks.length > 0 && (
         <div className="mt-4 space-y-2">

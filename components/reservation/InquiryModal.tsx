@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import type { AppLocale } from "@/i18n/routing";
 import type { CarListItem, SearchContext } from "@/lib/types";
 import { buildWhatsAppUrl, type InquiryContext } from "@/lib/whatsapp";
+import { DateField } from "@/components/ui/DateField";
 
 type Props = {
   car: CarListItem | null;
@@ -256,13 +257,12 @@ export function InquiryModal({ car, search, locations = [], onClose }: Props) {
                   <div>
                     <label className={lbl}>{t("summaryPickup")}</label>
                     <div className="grid grid-cols-[minmax(0,1fr)_6.75rem] gap-2">
-                      <input
-                        type="date"
+                      <DateField
                         value={pickupDate}
                         min={splitISO(undefined, 0).date}
-                        onChange={(e) => setPickupDate(e.target.value)}
-                        className={`${input} appearance-none text-left [&::-webkit-date-and-time-value]:text-left`}
-                        required
+                        locale={locale}
+                        onChange={setPickupDate}
+                        className={input}
                       />
                       <div className="relative">
                         <select
@@ -284,13 +284,12 @@ export function InquiryModal({ car, search, locations = [], onClose }: Props) {
                   <div>
                     <label className={lbl}>{t("summaryReturn")}</label>
                     <div className="grid grid-cols-[minmax(0,1fr)_6.75rem] gap-2">
-                      <input
-                        type="date"
+                      <DateField
                         value={returnDate}
                         min={pickupDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                        className={`${input} appearance-none text-left [&::-webkit-date-and-time-value]:text-left`}
-                        required
+                        locale={locale}
+                        onChange={setReturnDate}
+                        className={input}
                       />
                       <div className="relative">
                         <select
